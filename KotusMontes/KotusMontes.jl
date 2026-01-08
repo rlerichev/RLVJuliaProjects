@@ -38,10 +38,15 @@ $f_{\lambda,\mu}(z)=\lambda e^z + \frac{\mu}{z}$
 $f'_{\lambda,\mu}(z)=\lambda e^z - \frac{\mu}{z^2}$
 
 $f''_{\lambda,\mu}(z)=\lambda e^z + 2\frac{\mu}{z^3}$
+
+$f^2_{\lambda,\mu}(z)=\lambda e^{\lambda e^z + \frac{\mu}{z}} + \frac{\mu}{\lambda e^z + \frac{\mu}{z}}=\lambda e^{\lambda e^z + \frac{\mu}{z}} + \frac{\mu z}{\lambda z e^z + \mu}$
 """
 
 # ╔═╡ dcc54357-7342-4978-a0e3-ae25b3161158
 f(l::Number, m::Number, z::Number) = l*exp(z)+m/z
+
+# ╔═╡ 04d2ed2f-de6c-4e5a-a5de-c848b6de8a87
+f2(l::Number, m::Number, z::Number) = l*exp(l*exp(z)+m/z)+m*z/(l*z*exp(z)+m)
 
 # ╔═╡ 729aaaf9-28f3-4274-9a26-12fc6f80f074
 f´(l::Number, m::Number, z::Number) = l*exp(z)-m/(z^2)
@@ -90,7 +95,7 @@ $\implies \arg(z^2 e^z) = 2\arg(x+yi)+y+2\pi k = \arg\big(\frac{\mu}{\lambda}\bi
 
 $\implies \tan^{-1}\big(\frac{y}{x}\big) = \frac{-\pi - y -2\pi k}{2}$
 
-$\implies x = x(y) = \frac{y}{\tan\big(\frac{-\pi - y -2\pi k}{2}\big)} = \frac{y}{\tan\big(-\frac{y+\pi}{2}\big)}$
+$\implies x = x(y) = \frac{y}{\tan\big(\frac{-\pi - y -2\pi k}{2}\big)} = -\frac{y}{\tan\big(\frac{y+\pi}{2}\big)}$
 
 """
 
@@ -105,6 +110,9 @@ end
 
 # ╔═╡ 7e62773c-550b-483e-bf86-efed99abbbc6
 cx(y::Real, l::Real, m::Real) = -y/(tan((y+pi)/2))
+
+# ╔═╡ 3031e81a-5cd4-47f5-8d24-0d407ea29327
+cxC(y::Real, l::Number, m::Number) = y/(tan((angle(m/l)-y)/2))
 
 # ╔═╡ dbbdd5ab-3e34-4419-b4d4-a6d2d9d2f558
 let
@@ -360,7 +368,7 @@ end
 
 # ╔═╡ edf8fc8f-b6bd-4f29-af08-00039b30acd1
 let
-	l,m = -20,0.25 #-2,0.5 #0.1,4 #-4,4.5 #-4,1 #-3,0.1 #-0.25,1 # -1,0.25
+	l,m = -20,0.25 #-1.5,5 #-2,0.5 #0.1,4 #-4,4.5 #-4,1 #-3,0.1 #-0.25,1 # -1,0.25
 	
 	xmin,xmax,ymin,ymax = -12,2,-6,6
 	Δx,Δy = (xmax-xmin)/720, (ymax-ymin)/720
@@ -413,34 +421,9 @@ md"""
 	fig
 end=#
 
-# ╔═╡ 2b61308c-3efa-47a9-88d8-0ea870ca3d77
-imgmandelbrot((c,z)->z^2+c, -2.1:0.005:0.5,-1.4:0.005:1.4, seed=0, colormap=:vangogh,
-	hasescaped = (c,z) -> stops(z->z^2+c, z, 2, ε=0.00001), maxiterations=64)
-
 # ╔═╡ 6e0bf940-1d94-4efa-a0a0-6558ba5d67fe
 let
 	xmin,xmax,ymin,ymax = -6,0,0,6
-	Δx,Δy = (xmax-xmin)/720, (ymax-ymin)/720
-	Δ = min(Δx,Δy)
-	xs = xmin:Δ:xmax
-	ys = ymin:Δ:ymax
-	
-	fig = Figure(size=(1000,800))
-	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
-
-	mandelbrot!(ax,
-		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
-		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
-		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.00001), # || real(z)<-16, 
-		maxiterations=124, colormap=:vangogh
-	)
-
-	fig
-end
-
-# ╔═╡ 05efe4d3-4126-449a-ac48-1799c4c2f28a
-let
-	xmin,xmax,ymin,ymax = -5,-3,4,5
 	Δx,Δy = (xmax-xmin)/720, (ymax-ymin)/720
 	Δ = min(Δx,Δy)
 	xs = xmin:Δ:xmax
@@ -480,34 +463,46 @@ let
 	fig
 end
 
-# ╔═╡ 2c9f1a59-ad76-4476-8d32-7e158dcd2541
-let
-	xmin,xmax,ymin,ymax = -5,0,0,2
-	Δx,Δy = (xmax-xmin)/800, (ymax-ymin)/800
-	Δ = min(Δx,Δy)
-	xs = xmin:Δ:xmax
-	ys = ymin:Δ:ymax
-	
-	fig = Figure(size=(1000,600))
-	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
-
-	mandelbrot!(ax,
-		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
-		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.000001),
-		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.00001), # || real(z)<-16, 
-		maxiterations=124, colormap=:vangogh
-	)
-
-	fig
-end
-
 # ╔═╡ 7a0d58fd-7238-4f0c-accf-9e429ca4d325
 md"""
-## Paquetes Software
+## Software Julia packages
 """
 
 # ╔═╡ a07e4983-d801-47ba-9531-16bdfb1f5f26
 const Gr = SDDGraphics
+
+# ╔═╡ 99dc3a03-9aa0-4f52-8ed7-ffb4d4e5b538
+let
+	xmin,xmax,ymin,ymax = -10,0,0,10
+	Δx,Δy = (xmax-xmin)/920, (ymax-ymin)/920
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+	
+	fig = Figure(size=(800,800))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
+
+	mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcritic1b(real(lm), imag(lm), maxiterations=20, ε=0.001),
+		hasescaped=(c,z)->real(z)<-16, # ||real(z)>16, 
+		maxiterations=80, colormap=Gr.reverse(:vangogh)
+	)
+
+	save("test.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ 6b8acca5-4fd3-4812-a6c9-7f75f6b17b64
+mandelbrot((c,z)->z^2+c, -2.01:0.005:0.51,-1.16:0.005:1.16, seed=0, colormap=Gr.reverse(:vangogh),
+	hasescaped = (c,z) -> abs2(z)>4, maxiterations=60, axis=(;aspect=DataAspect()))
+
+# ╔═╡ c14eacb3-f173-4609-b750-413027a296ca
+prismx = push!(RGBA.(deepcopy(colorschemes[:prism].colors)), RGBA(1,1,1,0.25))
+
+# ╔═╡ fd700d57-b159-4a0e-87e6-6b7361254b60
+vermeerx = push!(RGBA.(Gr.reverse(:vermeer)), RGBA(0,0,0,0.5))
 
 # ╔═╡ 70f58eb7-adc8-451c-94a6-11344bbb200b
 let
@@ -524,7 +519,9 @@ let
 
 	f = createflm(l,m)
 	
-	trappedpoints!(ax, f, xs, ys, hasescaped=z->real(z)<-12, maxiterations=120, colormap=Gr.reverse(:vangogh))
+	trappedpoints!(ax, f, xs, ys, hasescaped=z->real(z)<-12, maxiterations=120,
+		colormap=vermeerx #Gr.reverse(:vangogh)
+	)
 
 	c1 = findcritic1b(l, m, maxiterations=20)
 	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
@@ -538,9 +535,13 @@ let
 	fig
 end
 
-# ╔═╡ 99dc3a03-9aa0-4f52-8ed7-ffb4d4e5b538
+# ╔═╡ 2b61308c-3efa-47a9-88d8-0ea870ca3d77
+mandelbrot((c,z)->z^2+c, -2.01:0.005:0.51,-1.16:0.005:1.16, seed=0, colormap=vermeerx, #Gr.reverse(:vermeer),
+	hasescaped = (c,z) -> stops(z->z^2+c, z, 2, ε=0.00001) || abs2(z)>4, maxiterations=240, axis=(;aspect=DataAspect()))
+
+# ╔═╡ 2382c3cc-266c-4f82-9c2f-daf60ded2ee9
 let
-	xmin,xmax,ymin,ymax = -10,0,0,10
+	xmin,xmax,ymin,ymax = -6,0,0,6
 	Δx,Δy = (xmax-xmin)/720, (ymax-ymin)/720
 	Δ = min(Δx,Δy)
 	xs = xmin:Δ:xmax
@@ -551,10 +552,77 @@ let
 
 	mandelbrot!(ax,
 		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
-		seed = lm -> findcritic1b(real(lm), imag(lm), maxiterations=20, ε=0.001),
-		hasescaped=(c,z)->real(z)<-16, # ||real(z)>16, 
-		maxiterations=80, colormap=Gr.reverse(:vangogh)
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.00001), 
+		maxiterations=40, colormap=vermeerx #:vangogh
 	)
+
+	fig
+end
+
+# ╔═╡ 74ebf7f1-da95-40fe-bc67-2e2dee196df6
+let
+	xmin,xmax,ymin,ymax = -6,0,0,6
+	Δx,Δy = (xmax-xmin)/720, (ymax-ymin)/720
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+	
+	fig = Figure(size=(1000,800))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
+
+	mandelbrot!(ax,
+		(lm,z) -> f2(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		hasescaped = (lm,z) -> abs(real(f(real(lm), imag(lm), z)))>16,
+		#hasescaped = (lm,z) -> stops(z->f2(real(lm), imag(lm), z), z, 2, ε=0.00001),
+		#|| real(f(real(lm), imag(lm), z))<-16, 
+		maxiterations=40, colormap=vermeerx #:vangogh
+	)
+
+	fig
+end
+
+# ╔═╡ 05efe4d3-4126-449a-ac48-1799c4c2f28a
+let
+	xmin,xmax,ymin,ymax = -5,-3,4,5
+	Δx,Δy = (xmax-xmin)/720, (ymax-ymin)/720
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+	
+	fig = Figure(size=(1000,800))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
+
+	mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.00001), # || abs2(z)>100, 
+		maxiterations=320, colormap=vermeerx #:vangogh
+	)
+
+	fig
+end
+
+# ╔═╡ 2c9f1a59-ad76-4476-8d32-7e158dcd2541
+let
+	xmin,xmax,ymin,ymax = -5,0,0,2
+	Δx,Δy = (xmax-xmin)/800, (ymax-ymin)/800
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+	
+	fig = Figure(size=(1000,600))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
+
+	mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.000001),
+		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.00001), # || real(z)<-16, 
+		maxiterations=120, colormap=vermeerx #Gr.reverse(:vermeer) #prismx #:vangogh
+	)
+
+	#lines!(ax, [-ℯ,0], [0,2/ℯ], color=:red)
 
 	fig
 end
@@ -562,6 +630,7 @@ end
 # ╔═╡ Cell order:
 # ╟─afe66166-e9ca-11f0-bad5-59bd6959ad58
 # ╠═dcc54357-7342-4978-a0e3-ae25b3161158
+# ╠═04d2ed2f-de6c-4e5a-a5de-c848b6de8a87
 # ╠═729aaaf9-28f3-4274-9a26-12fc6f80f074
 # ╠═4662f2ab-8b41-4211-98e0-58778d61d007
 # ╠═f09e37b5-b0af-46c3-bf25-51017bf48ffa
@@ -570,6 +639,7 @@ end
 # ╟─8a8619e8-0236-4c37-bd09-65d82110fc2a
 # ╠═502034db-8faa-41ae-92be-c150305a1105
 # ╠═7e62773c-550b-483e-bf86-efed99abbbc6
+# ╠═3031e81a-5cd4-47f5-8d24-0d407ea29327
 # ╠═dbbdd5ab-3e34-4419-b4d4-a6d2d9d2f558
 # ╠═63987b6c-b0d6-4353-98af-c769dd7ca751
 # ╟─2f247a63-5943-49e7-a71e-f6d94af13181
@@ -591,16 +661,21 @@ end
 # ╠═edf8fc8f-b6bd-4f29-af08-00039b30acd1
 # ╟─ffc2b1aa-c1d9-4c69-bccd-94d24b9744aa
 # ╠═99dc3a03-9aa0-4f52-8ed7-ffb4d4e5b538
+# ╠═6b8acca5-4fd3-4812-a6c9-7f75f6b17b64
 # ╠═d91916f8-37a6-4494-ac61-6df7aba6a0c1
 # ╠═2b61308c-3efa-47a9-88d8-0ea870ca3d77
 # ╠═6e0bf940-1d94-4efa-a0a0-6558ba5d67fe
+# ╠═2382c3cc-266c-4f82-9c2f-daf60ded2ee9
+# ╠═74ebf7f1-da95-40fe-bc67-2e2dee196df6
 # ╠═05efe4d3-4126-449a-ac48-1799c4c2f28a
 # ╠═de1c003f-d951-47cf-acc3-beaea021298b
 # ╠═2c9f1a59-ad76-4476-8d32-7e158dcd2541
 # ╠═d52d0e77-9a16-4163-b2ef-10779cd1cdff
-# ╟─7a0d58fd-7238-4f0c-accf-9e429ca4d325
+# ╠═7a0d58fd-7238-4f0c-accf-9e429ca4d325
 # ╠═7af6c311-4ff3-4f71-84f0-8d9ef2d591c8
 # ╠═df10e677-8b09-473e-8b15-3ee063496f34
 # ╠═4b8a3a21-889f-4189-a6c5-e06014e1e8e0
 # ╠═4294274f-8874-4840-a241-0cce4969d5dd
 # ╠═a07e4983-d801-47ba-9531-16bdfb1f5f26
+# ╠═c14eacb3-f173-4609-b750-413027a296ca
+# ╠═fd700d57-b159-4a0e-87e6-6b7361254b60
