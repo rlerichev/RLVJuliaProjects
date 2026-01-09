@@ -16,7 +16,7 @@ begin
 end
 
 # ╔═╡ 7af6c311-4ff3-4f71-84f0-8d9ef2d591c8
-using Colors, ColorSchemes, Images
+using Colors, ColorSchemes, Images, ImageIO, FileIO
 
 # ╔═╡ df10e677-8b09-473e-8b15-3ee063496f34
 using Makie, GLMakie
@@ -557,6 +557,15 @@ $\{z\in\mathbb{C}|\,\,q_c^{2n}(0)\rightarrow z_c\,\,\mathrm{or}\,\,q_c^{2n}(0)\r
 where $q_c(z)=z^2+c$ and $z_c$ is an attracting fixed point of $q^2_c$.
 """
 
+# ╔═╡ 07765e47-4d63-4df8-ab8f-906d71a75338
+mandelbrot((c,z)->z^2+c, -2.01:0.002:0.51,-1.16:0.002:1.16, seed=0, colormap=:cubehelix, #vermeerx,
+	hasescaped = (c,z) -> stops(z->z^2+c, z, 2, ε=0.00001) || abs2(z)>144, maxiterations=128, axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16)))
+
+# ╔═╡ 735528fa-e490-47ab-bc6c-bbba9b2fdac8
+md"""
+$U$
+"""
+
 # ╔═╡ 855b2724-3129-4166-b170-99f6ae6cbc37
 md"""
 Let $z_0=z_0(\lambda,\mu)\in\mathbb{C}$ be the convergence point of the sequence $f_{\lambda,\mu}^{2n}(c_1)$, such that $|(f_{\lambda,\mu}^{2n})'(z_0)|<1$ and $z_0\neq0$.
@@ -624,17 +633,19 @@ let
 	l,m = -20,0.25 # -4,4.5
 	
 	xmin,xmax,ymin,ymax = -8,4,-12,12
-	Δx,Δy = (xmax-xmin)/800, (ymax-ymin)/800
+	Δx,Δy = (xmax-xmin)/1200, (ymax-ymin)/1200
 	Δ = min(Δx,Δy)
 	xs = xmin:Δ:xmax
 	ys = ymin:Δ:ymax
+
+	maxits = 64
 	
-	fig = Figure(size=(800,800))
+	fig = Figure(size=(800,1200))
 	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax))
 
 	f = createflm(l,m)
 	
-	trappedpoints!(ax, f, xs, ys, hasescaped=z->real(z)<max(-64,min(-8,l/m*4)), maxiterations=64,
+	trappedpoints!(ax, f, xs, ys, hasescaped=z->real(z)<max(-64,min(-8,l/m*4)), maxiterations=maxits,
 		colormap=vermeerx #Gr.reverse(:vangogh)
 	)
 
@@ -646,110 +657,10 @@ let
 
 	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c2), imag(c2))], color=:red, markersize=8)	
 	scatter!(ax, [Point2f(real(c1), -imag(c1)), Point2f(real(c2), -imag(c2))], color=:green, markersize=8)	
+
+	Colorbar(fig[1, 2], limits = (1, maxits), colormap = vermeerx,
+    label = "Iterations", vertical = true, flipaxis = true)
 	
-	fig
-end
-
-# ╔═╡ 99dc3a03-9aa0-4f52-8ed7-ffb4d4e5b538
-let
-	xmin,xmax,ymin,ymax = -6,0,0,6
-	Δx,Δy = (xmax-xmin)/800, (ymax-ymin)/800
-	Δ = min(Δx,Δy)
-	xs = xmin:Δ:xmax
-	ys = ymin:Δ:ymax
-	
-	fig = Figure(size=(800,800))
-	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
-
-	mandelbrot!(ax,
-		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
-		seed = lm -> findcritic1b(real(lm), imag(lm), maxiterations=20, ε=0.001),
-		hasescaped=(c,z)->real(z)<-16, # ||real(z)>16, 
-		maxiterations=200, colormap=vermeerx #Gr.reverse(:vangogh)
-	)
-
-	#g(x)=-2/x
-	#lines!(ax,xs,g.(xs),color=:yellow)
-
-	#save("test.jpg", fig)
-	
-	fig
-end
-
-# ╔═╡ 6b8acca5-4fd3-4812-a6c9-7f75f6b17b64
-mandelbrot((c,z)->z^2+c, -2.01:0.005:0.51,-1.16:0.005:1.16, seed=0, colormap=vermeerx,#Gr.reverse(:vangogh),
-	hasescaped = (c,z) -> abs2(z)>4, maxiterations=60, axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16)))
-
-# ╔═╡ 2382c3cc-266c-4f82-9c2f-daf60ded2ee9
-let
-	xmin,xmax,ymin,ymax = -6,0,0,6
-	Δx,Δy = (xmax-xmin)/800, (ymax-ymin)/800
-	Δ = min(Δx,Δy)
-	xs = xmin:Δ:xmax
-	ys = ymin:Δ:ymax
-	
-	fig = Figure(size=(800,800))
-	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
-
-	mandelbrot!(ax,
-		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
-		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
-		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.0000025), 
-		maxiterations=200, colormap=vermeerx
-	)
-
-	lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
-
-	fig
-end
-
-# ╔═╡ 2b61308c-3efa-47a9-88d8-0ea870ca3d77
-mandelbrot((c,z)->z^2+c, -2.01:0.005:0.51,-1.16:0.005:1.16, seed=0, colormap=vermeerx,
-	hasescaped = (c,z) -> stops(z->z^2+c, z, 2, ε=0.00001) || abs2(z)>4, maxiterations=240, axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16)))
-
-# ╔═╡ 35911590-c861-465d-921c-de93b66de7e7
-let
-	xmin,xmax,ymin,ymax = -6,0,0,6
-	Δx,Δy = (xmax-xmin)/800, (ymax-ymin)/800
-	Δ = min(Δx,Δy)
-	xs = xmin:Δ:xmax
-	ys = ymin:Δ:ymax
-	
-	fig = Figure(size=(800,800))
-	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
-
-	mandelbrot!(ax,
-		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
-		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
-		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.0000025) && real(f(real(lm), imag(lm), z))<-16, 
-		maxiterations=200, colormap=vermeerx
-	)
-
-	lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
-
-	fig
-end
-
-# ╔═╡ 3d076c9b-263b-4d62-a17e-afbd7fee2f21
-let
-	xmin,xmax,ymin,ymax = -6,0,0,6
-	Δx,Δy = (xmax-xmin)/800, (ymax-ymin)/800
-	Δ = min(Δx,Δy)
-	xs = xmin:Δ:xmax
-	ys = ymin:Δ:ymax
-	
-	fig = Figure(size=(800,800))
-	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
-
-	mandelbrot!(ax,
-		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
-		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
-		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.0000025) && abs2(f(real(lm), imag(lm), z))<36, 
-		maxiterations=200, colormap=vermeerx
-	)
-
-	lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
-
 	fig
 end
 
@@ -822,6 +733,147 @@ let
 	fig
 end
 
+# ╔═╡ 57f7c4ba-d10a-4f0d-ae0d-b12f49a1c313
+cuherx = pushfirst!(push!(RGBA.(Gr.reverse(:cubehelix)), RGBA(0,0,0,0.9)),RGBA(1,1,1,0.1))
+
+# ╔═╡ 99dc3a03-9aa0-4f52-8ed7-ffb4d4e5b538
+let
+	xmin,xmax,ymin,ymax = -6,0,0,6
+	Δx,Δy = (xmax-xmin)/1200, (ymax-ymin)/1200
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 200
+	cm = cuherx #Gr.reverse(:cubehelix) # vermeerx #Gr.reverse(:vangogh)
+
+	img = imgmandelbrot(
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcritic1b(real(lm), imag(lm), maxiterations=20, ε=0.001),
+		hasescaped=(c,z)->real(z)<-16,
+		maxiterations=maxits, colormap=cm
+	)
+
+	save("Mandelbrot1_hires.jpg", img)
+	
+	fig = Figure(size=(1200,1000))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), xtickformat = values -> ["$((xmax-xmin)*(value/1200)+xmin)" for value in values], xticks=0:200:1200, ytickformat = values -> ["$((ymax-ymin)*(value/1200)+ymin)" for value in values], yticks=0:200:1200) 
+	#, yticks=ymin:1:ymax ) #, limits=(xmin,xmax,ymin,ymax), )
+
+	#=mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcritic1b(real(lm), imag(lm), maxiterations=20, ε=0.001),
+		hasescaped=(c,z)->real(z)<-16, # ||real(z)>16, 
+		maxiterations=maxits, colormap=cm
+	)=#
+	image!(ax, rotr90(img))
+
+	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true)
+	
+	save("Madelbrot1_plot.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ 6b8acca5-4fd3-4812-a6c9-7f75f6b17b64
+mandelbrot((c,z)->z^2+c, -2.01:0.002:0.51,-1.16:0.002:1.16, seed=0, colormap=cuherx, #vermeerx,#Gr.reverse(:vangogh),
+	hasescaped = (c,z) -> abs2(z)>4, maxiterations=48, axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16), xticks=-2:0.5:0.5, yticks=-1:0.25:1))
+
+# ╔═╡ 2b61308c-3efa-47a9-88d8-0ea870ca3d77
+mandelbrot((c,z)->z^2+c, -2.01:0.002:0.51,-1.16:0.002:1.16, seed=0, colormap=cuherx, #vermeerx,
+	hasescaped = (c,z) -> stops(z->z^2+c, z, 2, ε=0.00001) || abs2(z)>144, maxiterations=128, axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16)))
+
+# ╔═╡ 0947a4b6-0309-4fea-bcab-7a3f0d036974
+cuhex = pushfirst!(push!(RGBA.(colorschemes[:cubehelix].colors), RGBA(1,1,1,0.1)),RGBA(0,0,0,0.9))
+
+# ╔═╡ 2382c3cc-266c-4f82-9c2f-daf60ded2ee9
+let
+	xmin,xmax,ymin,ymax = -6,0,0,6
+	Δx,Δy = (xmax-xmin)/1000, (ymax-ymin)/1000
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 200
+	cm = cuhex #vermeerx
+	
+	fig = Figure(size=(1200,1000))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
+
+	mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.0000025), 
+		maxiterations=maxits, colormap=cm
+	)
+
+	lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
+
+	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true)
+	
+	fig
+end
+
+# ╔═╡ 35911590-c861-465d-921c-de93b66de7e7
+let
+	xmin,xmax,ymin,ymax = -6,0,0,6
+	Δx,Δy = (xmax-xmin)/1200, (ymax-ymin)/1200
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 200
+	cm = cuhex #vermeerx
+	
+	fig = Figure(size=(1200,1000))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
+
+	mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.0000025) && real(f(real(lm), imag(lm), z))<-16, 
+		maxiterations=maxits, colormap=cm
+	)
+
+	lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
+
+	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true)
+	
+	fig
+end
+
+# ╔═╡ 3d076c9b-263b-4d62-a17e-afbd7fee2f21
+let
+	xmin,xmax,ymin,ymax = -6,0,0,6
+	Δx,Δy = (xmax-xmin)/1200, (ymax-ymin)/1200
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 200
+	cm = cuhex #vermeerx
+	
+	fig = Figure(size=(1200,1000))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax), xticks=xmin:1:xmax, yticks=ymin:1:ymax)
+
+	mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.0000025) && abs2(f(real(lm), imag(lm), z))<36, 
+		maxiterations=maxits, colormap=cuhex
+	)
+
+	lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
+
+	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true)	
+	
+	fig
+end
+
 # ╔═╡ Cell order:
 # ╟─afe66166-e9ca-11f0-bad5-59bd6959ad58
 # ╠═dcc54357-7342-4978-a0e3-ae25b3161158
@@ -868,6 +920,8 @@ end
 # ╠═2382c3cc-266c-4f82-9c2f-daf60ded2ee9
 # ╟─249dda01-d980-4cc6-86f0-1df2a31dd7d6
 # ╠═2b61308c-3efa-47a9-88d8-0ea870ca3d77
+# ╠═07765e47-4d63-4df8-ab8f-906d71a75338
+# ╟─735528fa-e490-47ab-bc6c-bbba9b2fdac8
 # ╠═35911590-c861-465d-921c-de93b66de7e7
 # ╟─855b2724-3129-4166-b170-99f6ae6cbc37
 # ╠═3d076c9b-263b-4d62-a17e-afbd7fee2f21
@@ -887,3 +941,5 @@ end
 # ╠═a07e4983-d801-47ba-9531-16bdfb1f5f26
 # ╠═c14eacb3-f173-4609-b750-413027a296ca
 # ╠═fd700d57-b159-4a0e-87e6-6b7361254b60
+# ╠═57f7c4ba-d10a-4f0d-ae0d-b12f49a1c313
+# ╠═0947a4b6-0309-4fea-bcab-7a3f0d036974
