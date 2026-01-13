@@ -1,0 +1,1525 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children no
+\language spanish
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement h
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+For the section of bifurcations...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Bifurcations_plot.jpg
+	lyxscale 50
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:M2BifParams"
+
+\end_inset
+
+Some bifurcations and 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}\neq0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Appendix:
+ Numerical approximations and drawings
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Mandelbrot_ref1.png
+	lyxscale 50
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:TheMandelbrot"
+
+\end_inset
+
+
+\begin_inset Formula $\mathbb{M}$
+\end_inset
+
+,
+ the Mandelbrot set,
+ drawn in black.
+ The other colors are determined by the escape time of the iterates 
+\begin_inset Formula $z_{n}=q_{c}^{n}(0)$
+\end_inset
+
+,
+ considering that 
+\begin_inset Formula $z_{n}$
+\end_inset
+
+ escapes when 
+\begin_inset Formula $|z|^{2}>4$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In order to better understand this section,
+ let us recall that the Mandelbrot set is
+\begin_inset Formula 
+\[
+\mathbb{M}=\left\{ c\in\mathbb{C}|\,\,o(0,q_{c})\,\,\mathrm{is\,bounded}\right\} =\left\{ c\in\mathbb{C}|\,\,J(q_{c})\,\,\mathrm{is\,connected}\right\} ,
+\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $q_{c}(z)=z^{2}+c$
+\end_inset
+
+.
+ The point 
+\begin_inset Formula $0$
+\end_inset
+
+ is the critical point of each function 
+\begin_inset Formula $q_{c}$
+\end_inset
+
+.
+ The classical algorithm of coloring by escape time is commonly used to draw the Mandelbrot set (see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:TheMandelbrot"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+The family 
+\begin_inset Formula $f_{\lambda,\mu}$
+\end_inset
+
+ does not have a unique set of critical points for all pairs 
+\begin_inset Formula $(\lambda,\mu)$
+\end_inset
+
+;
+ there are infinitely many critical points for each 
+\begin_inset Formula $(\lambda,\mu)$
+\end_inset
+
+,
+ and none of them can be written explicitly in a formula.
+ Thus,
+ the drawing of an analogous Mandelbrot set cannot directly use the classical drawing algorithms.
+\end_layout
+
+\begin_layout Standard
+First,
+ it is necessary to calculate the critical points.
+ Let us recall that the critical points 
+\begin_inset Formula $c_{k}=c_{k}(\lambda,\mu)$
+\end_inset
+
+ of 
+\begin_inset Formula $f_{\lambda,\mu}$
+\end_inset
+
+ corresponds to the intersections of the curves
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{\pm}(x)=\pm\sqrt{\left|\frac{\mu}{\lambda}\right|\frac{1}{e^{x}}-x^{2}},
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+x(y)=-\frac{y}{\tan(\frac{y+\pi}{2})}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the following items,
+ we describe the algorithms to approximate numerically the critical points 
+\begin_inset Formula $c_{k}=c_{k}(\lambda,\mu)$
+\end_inset
+
+,
+ for 
+\begin_inset Formula $k\in\mathbb{N}-\left\{ 0\right\} $
+\end_inset
+
+,
+ given a parameter pair 
+\begin_inset Formula $(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Approximation of 
+\begin_inset Formula $c_{1}$
+\end_inset
+
+,
+ the nearest critical point to 
+\begin_inset Formula $0$
+\end_inset
+
+ with 
+\begin_inset Formula $Re(c_{1})>0$
+\end_inset
+
+:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+We know that 
+\begin_inset Formula $c_{1}$
+\end_inset
+
+ is the intersection of the curves 
+\begin_inset Formula $y_{+}(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $x(y)$
+\end_inset
+
+,
+ with 
+\begin_inset Formula $y\in(0,\pi)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $c_{1}$
+\end_inset
+
+ is approximated using a bisection search algorithm over 
+\begin_inset Formula $y$
+\end_inset
+
+ with initial values 
+\begin_inset Formula $y_{0,\min}=\delta=0.001$
+\end_inset
+
+ and 
+\begin_inset Formula $y_{0,\max}=\pi-\delta$
+\end_inset
+
+,
+ stopping when 
+\begin_inset Formula $\left|\frac{\mu}{\lambda}\right|\frac{1}{e^{x_{n}}}-x_{n}^{2}>0$
+\end_inset
+
+ and 
+\begin_inset Formula $|f'_{\lambda,\mu}(x_{n}+y_{+}(x_{n})i)|^{2}<\varepsilon=10^{-8}$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $x_{n}=x(y_{n})$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Approximation of 
+\begin_inset Formula $c_{k}$
+\end_inset
+
+,
+ for 
+\begin_inset Formula $k>1$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+First,
+ using the Newton-Raphson algorithm,
+ we approximate the root 
+\begin_inset Formula $x_{L}<0$
+\end_inset
+
+ of 
+\begin_inset Formula $g(x)=\left|\frac{\mu}{\lambda}\right|\frac{1}{e^{x}}-x^{2}$
+\end_inset
+
+ such that for all 
+\begin_inset Formula $x\in(-\infty,x_{L})$
+\end_inset
+
+ we have 
+\begin_inset Formula $g(x)>0$
+\end_inset
+
+.
+ Note that 
+\begin_inset Formula $y_{+}(x)=\sqrt{g(x)}$
+\end_inset
+
+ and 
+\begin_inset Formula $y_{+}(x_{L})=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+We know that 
+\begin_inset Formula $c_{k}\in(-\infty,x_{L})\times((2k-3)\pi,(2k-1)\pi)$
+\end_inset
+
+.
+ Then,
+ 
+\begin_inset Formula $c_{k}$
+\end_inset
+
+ is approximated using a compass search algorithm with initial value 
+\begin_inset Formula $z_{0}=x_{L}+2(k-1)\pi i$
+\end_inset
+
+,
+ stopping when 
+\begin_inset Formula $|f'_{\lambda,\mu}(z_{n})|^{2}<\varepsilon=10^{-8}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename BDomainPlus_plot_light.jpg
+	lyxscale 25
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:M1"
+
+\end_inset
+
+The set 
+\begin_inset Formula $\mathbb{M}_{1}$
+\end_inset
+
+ drawn in black.
+ The other colors are determined by the escape time of the iterates 
+\begin_inset Formula $z_{n}=f_{\lambda,\mu}^{n}(c_{1})$
+\end_inset
+
+,
+ considering that 
+\begin_inset Formula $z_{n}$
+\end_inset
+
+ escapes when 
+\begin_inset Formula $Re(z)<-16$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now,
+ it can be defined the analogue of the Mandelbrot set for the family 
+\begin_inset Formula $f_{\lambda,\mu}$
+\end_inset
+
+ (see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:M1"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+):
+\begin_inset Formula 
+\[
+\ensuremath{\mathbb{M}_{1}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,o(c_{1}(\lambda,\mu),f_{\lambda,\mu})\,\,\mathrm{is\,bounded}\}.}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Mandelbrot_ref3.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Mandelbrot_ref2.png
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:TheMandelbrot2"
+
+\end_inset
+
+At left,
+ the bulbs of period 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+ of the Mandelbrot set 
+\begin_inset Formula $\mathbb{M}$
+\end_inset
+
+.
+ At right,
+ the bulbs of period 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+,
+ and the complement of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbb{M}$
+\end_inset
+
+ considered as a bulb of period 
+\begin_inset Formula $1$
+\end_inset
+
+ (because 
+\begin_inset Formula $\infty$
+\end_inset
+
+ is a super-attracting fixed point for all 
+\begin_inset Formula $q_{c}$
+\end_inset
+
+).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The bulbs of period 
+\begin_inset Formula $N$
+\end_inset
+
+ of the Mandelbrot set are the open subsets 
+\begin_inset Formula $U\subset\mathbb{M}$
+\end_inset
+
+ such that for every 
+\begin_inset Formula $c\in U$
+\end_inset
+
+ the corresponding function 
+\begin_inset Formula $q_{c}$
+\end_inset
+
+ has a finite attracting periodic orbit of period 
+\begin_inset Formula $N$
+\end_inset
+
+,
+ and it is known that the critical point 
+\begin_inset Formula $0$
+\end_inset
+
+ belongs to the immediate basin of attraction of the orbit.
+ The algorithm to draw these bulbs of period 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+ use that 
+\begin_inset Formula $\mathbb{C}$
+\end_inset
+
+ is a complete metric space and the convergence of Cauchy sequences:
+ the iteration is stopped when 
+\begin_inset Formula $|q_{c}^{n}(0)-q_{c}^{n+2}(0)|<\varepsilon$
+\end_inset
+
+ and the points are coloring according to 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ See 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:TheMandelbrot2"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename BulbsPer2_plot.jpg
+	lyxscale 50
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:M2"
+
+\end_inset
+
+The bulbs of period 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+,
+ and the bulb associated to the Baker domain 
+\begin_inset Formula $F_{0}$
+\end_inset
+
+ of the set 
+\begin_inset Formula $\mathbb{M}_{2}$
+\end_inset
+
+,
+ are drawn with different colors.
+ Note the line 
+\begin_inset Formula $\mathcal{L}_{-1}$
+\end_inset
+
+ in light blue,
+ corresponding to parameters for which 
+\begin_inset Formula $f_{\lambda,\mu}$
+\end_inset
+
+ has a fixed parabolic point with multiplier equal to 
+\begin_inset Formula $-1$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $z_{0}=z_{0}(\lambda,\mu)\in\mathbb{C}$
+\end_inset
+
+ be the convergence point of the sequence 
+\begin_inset Formula $f_{\lambda,\mu}^{2n}(c_{1})$
+\end_inset
+
+,
+ such that 
+\begin_inset Formula $|(f_{\lambda,\mu}^{2n})'(z_{0})|<1$
+\end_inset
+
+ (that is,
+ 
+\begin_inset Formula $z_{0}$
+\end_inset
+
+ is attractor) or 
+\begin_inset Formula $z_{0}=0$
+\end_inset
+
+ (the pole).
+ We define 
+\begin_inset Formula 
+\[
+\ensuremath{\mathbb{M}_{2}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\}},
+\]
+
+\end_inset
+
+which represents the bulbs of period 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+,
+ and also the 
+\begin_inset Quotes eld
+\end_inset
+
+Baker bulb
+\begin_inset Quotes erd
+\end_inset
+
+ corresponding to the parameters for which 
+\begin_inset Formula $f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0$
+\end_inset
+
+.
+ See 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:M2"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename BulbsPer2Finite_plot.jpg
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename BulbBaker_plot.jpg
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:M2Bulbs"
+
+\end_inset
+
+At left 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}\neq0}$
+\end_inset
+
+,
+ the bulbs of period 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+.
+ At right,
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+Baker bulb
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Naturally,
+ one can differentiate the set of bulbs of period 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+,
+ and the 
+\begin_inset Quotes eld
+\end_inset
+
+Baker bulb
+\begin_inset Quotes erd
+\end_inset
+
+ set:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ensuremath{\mathbb{M}_{2,z_{0}\neq0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\neq0\}\subset\mathcal{M}_{2},}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ensuremath{\mathbb{M}_{2,z_{0}=0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0\}\subset\mathcal{M}_{2}.}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:M2Bulbs"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ for drawings of 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}\neq0}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=0}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section*
+Appendix:
+ Conjectures
+\end_layout
+
+\begin_layout Standard
+Let us recall that
+\begin_inset Formula 
+\[
+\ensuremath{\mathbb{B}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,F_{0}\cap Crit(f_{\lambda,\mu})\neq\emptyset\}},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $F_{0}=F_{0}(\lambda,\mu)$
+\end_inset
+
+ is the Baker domain of period 
+\begin_inset Formula $2$
+\end_inset
+
+ such that 
+\begin_inset Formula $0\in\partial F_{0}$
+\end_inset
+
+,
+ and 
+\begin_inset Formula $f_{\lambda,\mu}(F_{0})=F_{\infty}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph*
+Conjecture 1.
+\begin_inset CommandInset label
+LatexCommand label
+name "par:Conjecture1."
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $(\lambda,\mu)\in\mathcal{\mathbb{B}}$
+\end_inset
+
+,
+ then 
+\begin_inset Formula $c_{1},c_{-1}\in F_{0}$
+\end_inset
+
+,
+ and 
+\begin_inset Formula $c_{k},c_{-k}\in F_{\infty}$
+\end_inset
+
+ for all 
+\begin_inset Formula $k>1$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+According to Conjecture 1,
+ 
+\begin_inset Formula $\ensuremath{\mathbb{B}}$
+\end_inset
+
+ corresponds to the component of 
+\begin_inset Formula $\mathbb{C}-\mathbb{M}_{1}$
+\end_inset
+
+ containing the parameter pair 
+\begin_inset Formula $(-20,1/4)$
+\end_inset
+
+,
+ drawn in white and other colors (but not black) in 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:M1"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ Then we have
+\end_layout
+
+\begin_layout Paragraph*
+Corollary of Conjecture 1.
+\begin_inset Formula 
+\[
+\mathbb{B}\subset\mathcal{\mathbb{M}}_{2,z_{0}=0}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Conjecture_plot.jpg
+	lyxscale 50
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:M2Conjecture"
+
+\end_inset
+
+Parameter pairs in 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=0}$
+\end_inset
+
+,
+ but outside of 
+\begin_inset Formula $\mathbb{B}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename DynPlane_l-1698_m5.jpg
+	lyxscale 50
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:DynConjecture1"
+
+\end_inset
+
+
+\begin_inset Formula $(\lambda,\mu)=(-5e/8,5)$
+\end_inset
+
+.
+ 
+\begin_inset Formula $f_{\lambda,\mu}^{n}(c_{1})\notin F_{0}$
+\end_inset
+
+ for 
+\begin_inset Formula $n=0,1,2$
+\end_inset
+
+;
+ 
+\begin_inset Formula $f_{\lambda,\mu}^{3}(c_{1})\in F_{0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename DynPlane_l-3058_m475.jpg
+	lyxscale 50
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:DynConjecture2"
+
+\end_inset
+
+
+\begin_inset Formula $(\lambda,\mu)=(-9e/8,4.75)$
+\end_inset
+
+.
+ 
+\begin_inset Formula $f_{\lambda,\mu}^{n}(c_{1})\notin F_{0}$
+\end_inset
+
+ for 
+\begin_inset Formula $n=0,1,2,3,4$
+\end_inset
+
+;
+ 
+\begin_inset Formula $f_{\lambda,\mu}^{5}(c_{1})\in F_{0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename DynPlane_l-3624_m55.jpg
+	lyxscale 50
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:DynConjecture3"
+
+\end_inset
+
+
+\begin_inset Formula $(\lambda,\mu)=(-4e/3,5.5)$
+\end_inset
+
+.
+ 
+\begin_inset Formula $f_{\lambda,\mu}^{n}(c_{1})\notin F_{0}$
+\end_inset
+
+ for 
+\begin_inset Formula $n=0,1,2,3$
+\end_inset
+
+;
+ 
+\begin_inset Formula $f_{\lambda,\mu}^{4}(c_{1})\in F_{0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Conjecture 2.
+\end_layout
+
+\begin_layout Standard
+For all 
+\begin_inset Formula $(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}$
+\end_inset
+
+ and for any 
+\begin_inset Formula $k\in\mathbb{Z}-\left\{ -1,0,1\right\} $
+\end_inset
+
+,
+ 
+\begin_inset Formula $c_{k}\in F_{\infty}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Corollary of Conjecture 2.
+\end_layout
+
+\begin_layout Standard
+For any 
+\begin_inset Formula $k\in\mathbb{Z}-\left\{ -1,0,1\right\} $
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\mathbb{M}_{2,z_{0}=0}=\left\{ (\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{k})\rightarrow\infty\right\} 
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+=\left\{ (\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n+1}(c_{k})\rightarrow0\right\} .
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Conjecture 3.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbb{B}$
+\end_inset
+
+ is simply connected and 
+\begin_inset Formula $\mathcal{\mathbb{M}}_{2,z_{0}=0}$
+\end_inset
+
+ is not connected.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:M1"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:M2"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:M2Bulbs"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:M2Conjecture"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ we observe a subset 
+\begin_inset Formula $Q$
+\end_inset
+
+ with the familiar shape of the Mandelbrot set.
+ We state the following 
+\end_layout
+
+\begin_layout Paragraph*
+Conjecture 4.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f_{\lambda,\mu}$
+\end_inset
+
+ is a family of quadratic-like maps in a set of parameters 
+\begin_inset Formula $Q\subset[-4.5,-3.5]\times[4,5]$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Conjecture 5.
+\end_layout
+
+\begin_layout Standard
+There are infinite many subsets of parameters for which 
+\begin_inset Formula $f_{\lambda,\mu}$
+\end_inset
+
+ is a family of quadratic-like maps.
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,278 @@
+%% LyX 2.4.0~RC3 created this file.  For more info, see https://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[spanish]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{refstyle}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+
+\AtBeginDocument{\providecommand\figref[1]{\ref{fig:#1}}}
+\RS@ifundefined{subsecref}
+  {\newref{subsec}{name = \RSsectxt}}
+  {}
+\RS@ifundefined{thmref}
+  {\def\RSthmtxt{theorem~}\newref{thm}{name = \RSthmtxt}}
+  {}
+\RS@ifundefined{lemref}
+  {\def\RSlemtxt{lemma~}\newref{lem}{name = \RSlemtxt}}
+  {}
+
+
+\makeatother
+
+\usepackage{babel}
+\addto\shorthandsspanish{\spanishdeactivate{~<>}}
+\deactivatequoting
+
+\begin{document}
+For the section of bifurcations...
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=1\textwidth]{Bifurcations_plot}
+\par\end{centering}
+\caption{Some bifurcations and $\mathbb{M}_{2,z_{0}\protect\neq0}$.}\label{fig:M2BifParams}
+\end{figure}
+
+
+\section*{Appendix: Numerical approximations and drawings}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.75\textwidth]{Mandelbrot_ref1}
+\par\end{centering}
+\caption{$\mathbb{M}$, the Mandelbrot set, drawn in black. The other colors
+are determined by the escape time of the iterates $z_{n}=q_{c}^{n}(0)$,
+considering that $z_{n}$ escapes when $|z|^{2}>4$.}\label{fig:TheMandelbrot}
+\end{figure}
+
+In order to better understand this section, let us recall that the
+Mandelbrot set is
+\[
+\mathbb{M}=\left\{ c\in\mathbb{C}|\,\,o(0,q_{c})\,\,\mathrm{is\,bounded}\right\} =\left\{ c\in\mathbb{C}|\,\,J(q_{c})\,\,\mathrm{is\,connected}\right\} ,
+\]
+ where $q_{c}(z)=z^{2}+c$. The point $0$ is the critical point of
+each function $q_{c}$. The classical algorithm of coloring by escape
+time is commonly used to draw the Mandelbrot set (see \figref{TheMandelbrot}).
+
+The family $f_{\lambda,\mu}$ does not have a unique set of critical
+points for all pairs $(\lambda,\mu)$; there are infinitely many critical
+points for each $(\lambda,\mu)$, and none of them can be written
+explicitly in a formula. Thus, the drawing of an analogous Mandelbrot
+set cannot directly use the classical drawing algorithms.
+
+First, it is necessary to calculate the critical points. Let us recall
+that the critical points $c_{k}=c_{k}(\lambda,\mu)$ of $f_{\lambda,\mu}$
+corresponds to the intersections of the curves
+
+\[
+y_{\pm}(x)=\pm\sqrt{\left|\frac{\mu}{\lambda}\right|\frac{1}{e^{x}}-x^{2}},
+\]
+\[
+x(y)=-\frac{y}{\tan(\frac{y+\pi}{2})}.
+\]
+
+In the following items, we describe the algorithms to approximate
+numerically the critical points $c_{k}=c_{k}(\lambda,\mu)$, for $k\in\mathbb{N}-\left\{ 0\right\} $,
+given a parameter pair $(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}$. 
+\begin{enumerate}
+\item Approximation of $c_{1}$, the nearest critical point to $0$ with
+$Re(c_{1})>0$:
+\begin{enumerate}
+\item We know that $c_{1}$ is the intersection of the curves $y_{+}(x)$
+and $x(y)$, with $y\in(0,\pi)$.
+\item $c_{1}$ is approximated using a bisection search algorithm over $y$
+with initial values $y_{0,\min}=\delta=0.001$ and $y_{0,\max}=\pi-\delta$,
+stopping when $\left|\frac{\mu}{\lambda}\right|\frac{1}{e^{x_{n}}}-x_{n}^{2}>0$
+and $|f'_{\lambda,\mu}(x_{n}+y_{+}(x_{n})i)|^{2}<\varepsilon=10^{-8}$,
+where $x_{n}=x(y_{n})$.
+\end{enumerate}
+\item Approximation of $c_{k}$, for $k>1$.
+\begin{enumerate}
+\item First, using the Newton-Raphson algorithm, we approximate the root
+$x_{L}<0$ of $g(x)=\left|\frac{\mu}{\lambda}\right|\frac{1}{e^{x}}-x^{2}$
+such that for all $x\in(-\infty,x_{L})$ we have $g(x)>0$. Note that
+$y_{+}(x)=\sqrt{g(x)}$ and $y_{+}(x_{L})=0$.
+\item We know that $c_{k}\in(-\infty,x_{L})\times((2k-3)\pi,(2k-1)\pi)$.
+Then, $c_{k}$ is approximated using a compass search algorithm with
+initial value $z_{0}=x_{L}+2(k-1)\pi i$, stopping when $|f'_{\lambda,\mu}(z_{n})|^{2}<\varepsilon=10^{-8}$.
+\end{enumerate}
+\end{enumerate}
+%
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=1\textwidth]{BDomainPlus_plot_light}
+\par\end{centering}
+\caption{The set $\mathbb{M}_{1}$ drawn in black. The other colors are determined
+by the escape time of the iterates $z_{n}=f_{\lambda,\mu}^{n}(c_{1})$,
+considering that $z_{n}$ escapes when $Re(z)<-16$.}\label{fig:M1}
+\end{figure}
+
+Now, it can be defined the analogue of the Mandelbrot set for the
+family $f_{\lambda,\mu}$ (see \figref{M1}):
+\[
+\ensuremath{\mathbb{M}_{1}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,o(c_{1}(\lambda,\mu),f_{\lambda,\mu})\,\,\mathrm{is\,bounded}\}.}
+\]
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.5\textwidth]{Mandelbrot_ref3}\includegraphics[width=0.5\textwidth]{Mandelbrot_ref2}
+\par\end{centering}
+\caption{At left, the bulbs of period $1$ and $2$ of the Mandelbrot set
+$\mathbb{M}$. At right, the bulbs of period $1$ and $2$, and the
+complement of $\mathbb{M}$ considered as a bulb of period $1$ (because
+$\infty$ is a super-attracting fixed point for all $q_{c}$).}\label{fig:TheMandelbrot2}
+\end{figure}
+
+The bulbs of period $N$ of the Mandelbrot set are the open subsets
+$U\subset\mathbb{M}$ such that for every $c\in U$ the corresponding
+function $q_{c}$ has a finite attracting periodic orbit of period
+$N$, and it is known that the critical point $0$ belongs to the
+immediate basin of attraction of the orbit. The algorithm to draw
+these bulbs of period $1$ and $2$ use that $\mathbb{C}$ is a complete
+metric space and the convergence of Cauchy sequences: the iteration
+is stopped when $|q_{c}^{n}(0)-q_{c}^{n+2}(0)|<\varepsilon$ and the
+points are coloring according to $n$. See \figref{TheMandelbrot2}.
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.75\textwidth]{BulbsPer2_plot}
+\par\end{centering}
+\caption{The bulbs of period $1$ and $2$, and the bulb associated to the
+Baker domain $F_{0}$ of the set $\mathbb{M}_{2}$, are drawn with
+different colors. Note the line $\mathcal{L}_{-1}$ in light blue,
+corresponding to parameters for which $f_{\lambda,\mu}$ has a fixed
+parabolic point with multiplier equal to $-1$.}\label{fig:M2}
+\end{figure}
+
+Let $z_{0}=z_{0}(\lambda,\mu)\in\mathbb{C}$ be the convergence point
+of the sequence $f_{\lambda,\mu}^{2n}(c_{1})$, such that $|(f_{\lambda,\mu}^{2n})'(z_{0})|<1$
+(that is, $z_{0}$ is attractor) or $z_{0}=0$ (the pole). We define
+\[
+\ensuremath{\mathbb{M}_{2}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\}},
+\]
+which represents the bulbs of period $1$ and $2$, and also the ``Baker
+bulb'' corresponding to the parameters for which $f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0$.
+See \figref{M2}.
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.5\textwidth]{BulbsPer2Finite_plot}\includegraphics[width=0.5\textwidth]{BulbBaker_plot}
+\par\end{centering}
+\caption{At left $\mathbb{M}_{2,z_{0}\protect\neq0}$, the bulbs of period
+$1$ and $2$. At right, the ``Baker bulb'' $\mathbb{M}_{2,z_{0}=0}$.}\label{fig:M2Bulbs}
+\end{figure}
+
+Naturally, one can differentiate the set of bulbs of period $1$ and
+$2$, and the ``Baker bulb'' set:
+
+\[
+\ensuremath{\mathbb{M}_{2,z_{0}\neq0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\neq0\}\subset\mathcal{M}_{2},}
+\]
+
+\[
+\ensuremath{\mathbb{M}_{2,z_{0}=0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0\}\subset\mathcal{M}_{2}.}
+\]
+
+See \figref{M2Bulbs} for drawings of $\mathbb{M}_{2,z_{0}\neq0}$
+and $\mathbb{M}_{2,z_{0}=0}$. 
+
+\section*{Appendix: Conjectures}
+
+Let us recall that
+\[
+\ensuremath{\mathbb{B}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,F_{0}\cap Crit(f_{\lambda,\mu})\neq\emptyset\}},
+\]
+where $F_{0}=F_{0}(\lambda,\mu)$ is the Baker domain of period $2$
+such that $0\in\partial F_{0}$, and $f_{\lambda,\mu}(F_{0})=F_{\infty}$.
+
+\paragraph*{Conjecture 1.}\label{par:Conjecture1.}
+
+If $(\lambda,\mu)\in\mathcal{\mathbb{B}}$, then $c_{1},c_{-1}\in F_{0}$,
+and $c_{k},c_{-k}\in F_{\infty}$ for all $k>1$.\\
+
+According to Conjecture 1, $\ensuremath{\mathbb{B}}$ corresponds
+to the component of $\mathbb{C}-\mathbb{M}_{1}$ containing the parameter
+pair $(-20,1/4)$, drawn in white and other colors (but not black)
+in \figref{M1}. Then we have
+
+\paragraph*{Corollary of Conjecture 1.
+\[
+\mathbb{B}\subset\mathcal{\mathbb{M}}_{2,z_{0}=0}.
+\]
+}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.75\textwidth]{Conjecture_plot}
+\par\end{centering}
+\caption{Parameter pairs in $\mathbb{M}_{2,z_{0}=0}$, but outside of $\mathbb{B}$.}\label{fig:M2Conjecture}
+\end{figure}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.75\textwidth]{DynPlane_l-1698_m5}
+\par\end{centering}
+\caption{$(\lambda,\mu)=(-5e/8,5)$. $f_{\lambda,\mu}^{n}(c_{1})\protect\notin F_{0}$
+for $n=0,1,2$; $f_{\lambda,\mu}^{3}(c_{1})\in F_{0}$.}\label{fig:DynConjecture1}
+\end{figure}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.75\textwidth]{DynPlane_l-3058_m475}
+\par\end{centering}
+\caption{$(\lambda,\mu)=(-9e/8,4.75)$. $f_{\lambda,\mu}^{n}(c_{1})\protect\notin F_{0}$
+for $n=0,1,2,3,4$; $f_{\lambda,\mu}^{5}(c_{1})\in F_{0}$.}\label{fig:DynConjecture2}
+\end{figure}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.75\textwidth]{DynPlane_l-3624_m55}
+\par\end{centering}
+\caption{$(\lambda,\mu)=(-4e/3,5.5)$. $f_{\lambda,\mu}^{n}(c_{1})\protect\notin F_{0}$
+for $n=0,1,2,3$; $f_{\lambda,\mu}^{4}(c_{1})\in F_{0}$.}\label{fig:DynConjecture3}
+\end{figure}
+
+
+\paragraph*{Conjecture 2.}
+
+For all $(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}$ and
+for any $k\in\mathbb{Z}-\left\{ -1,0,1\right\} $, $c_{k}\in F_{\infty}$.\\
+
+
+\paragraph*{Corollary of Conjecture 2.}
+
+For any $k\in\mathbb{Z}-\left\{ -1,0,1\right\} $
+\[
+\mathbb{M}_{2,z_{0}=0}=\left\{ (\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{k})\rightarrow\infty\right\} 
+\]
+\[
+=\left\{ (\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n+1}(c_{k})\rightarrow0\right\} .
+\]
+
+
+\paragraph*{Conjecture 3.}
+
+$\mathbb{B}$ is simply connected and $\mathcal{\mathbb{M}}_{2,z_{0}=0}$
+is not connected.\\
+
+In \ref{fig:M1}, \ref{fig:M2}, \ref{fig:M2Bulbs}, and \ref{fig:M2Conjecture},
+we observe a subset $Q$ with the familiar shape of the Mandelbrot
+set. We state the following 
+
+\paragraph*{Conjecture 4.}
+
+$f_{\lambda,\mu}$ is a family of quadratic-like maps in a set of
+parameters $Q\subset[-4.5,-3.5]\times[4,5]$.\\
+
+
+\paragraph*{Conjecture 5.}
+
+There are infinite many subsets of parameters for which $f_{\lambda,\mu}$
+is a family of quadratic-like maps.
+\end{document}
