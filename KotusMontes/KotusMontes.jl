@@ -19,7 +19,7 @@ end
 using Colors, ColorSchemes, Images, ImageIO, FileIO
 
 # ╔═╡ df10e677-8b09-473e-8b15-3ee063496f34
-using Makie, GLMakie
+using Makie, GLMakie, CairoMakie
 
 # ╔═╡ 4294274f-8874-4840-a241-0cce4969d5dd
 using SDDCore, SDDGraphics, SDDGeometry, SDD
@@ -123,7 +123,7 @@ cx(y::Real, l::Real, m::Real) = -y/(tan((y+pi)/2))
 cxC(y::Real, l::Number, m::Number) = y/(tan((angle(m/l)-y)/2))
 
 # ╔═╡ dbbdd5ab-3e34-4419-b4d4-a6d2d9d2f558
-let
+#=let
 	l,m = -20,0.25
 	xmin,xmax,ymin,ymax = -0.8,0.8,0,1.8
 	
@@ -135,10 +135,10 @@ let
 	ys = ymin:0.001:ymax
 	lines!(ax, cx.(ys,l,m), ys, color=:orange, linewidth=4)
 	fig
-end
+end=#
 
 # ╔═╡ 63987b6c-b0d6-4353-98af-c769dd7ca751
-let
+#=let
 	l,m = -20,0.25
 	
 	fig = Figure(size=(1200,800))
@@ -149,7 +149,7 @@ let
 	lines!(ax, cx.(ys,l,m), ys, color=:orange, linewidth=4)
 	hlines!(ax, [pi,2pi,3pi], color=:black, linestyle=:dash)
 	fig
-end
+end=#
 
 # ╔═╡ 2f247a63-5943-49e7-a71e-f6d94af13181
 md"""
@@ -647,11 +647,11 @@ Let $c_1=c_1(\lambda,\mu),\,c_2=c_2(\lambda,\mu)\in\mathbb{C}$ be the critical p
 md"""
 In black, the "Mandelbrot set" of $f_{\lambda,\mu}$:
 
-$\mathcal{M}_1=\{(\lambda,\mu)\in\mathbb{R}^2|\,\,o(c_1,f_{\lambda,\mu})\,\,\mathrm{is\,bounded}\}.$
+$\mathbb{M}_1=\{(\lambda,\mu)\in\mathbb{R}^2|\,\,o(c_1,f_{\lambda,\mu})\,\,\mathrm{is\,bounded}\}.$
 
 In colors, using the escape time:
 
-$\mathbb{R}^2-\mathcal{M}_1.$
+$\mathbb{R}^2-\mathbb{M}_1.$
 """
 
 # ╔═╡ 0fd2c626-52e9-4f8c-8eac-64a2047d9729
@@ -713,10 +713,24 @@ md"""
 $\mathbb{B}=\{(\lambda,\mu)|\,\,F_0\cap Crit(f_{\lambda,\mu})\neq\emptyset\}$
 """
 
+# ╔═╡ 0ec76c85-d021-4a0b-8872-882c03f1a0d3
+md"""
+In black, the "Mandelbrot set" of $f_{\lambda,\mu}$
+
+$\mathbb{M}'_1=\{(\lambda,\mu)|\,\,o(c_1,f_{\lambda,\mu})\,\mathrm{is\,bounded,\,or\,} f^n_{\lambda,\mu}(c_1)\rightarrow+\infty\}$
+"""
+
 # ╔═╡ 65365633-6555-4f3d-945b-66275dcf8c7b
 md"""
 Reference: Mandelbrot set.
 """
+
+# ╔═╡ fef962ec-4550-4a2f-bb28-5df9c7ced028
+#=mandelbrot((c,z)->z^2+c, -2.01:0.002:0.51,-1.16:0.002:1.16, seed=0, colormap=cuherx, #vermeerx,
+	hasescaped = (c,z) -> !stops(z->z^2+c, z, 2, ε=0.00001) && abs2(z)>144, maxiterations=48, #  || 
+	depth_shift=1, interpolate=true, fxaa=true, ssao=true, # transparency=false, alpha=0.9, 
+	axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16), xticks=-2:0.25:0.5, yticks=-1:0.25:1, xgridcolor=RGBA(0.25,0.25,0.25,0.25), ygridcolor=RGBA(0.25,0.25,0.25,0.25), backgroundcolor=RGBA(1,1,1,0)))
+=#
 
 # ╔═╡ ffbacbc1-1b56-4b1f-93f1-0dce2f44bc9f
 md"""
@@ -724,7 +738,7 @@ Let $z_0=z_0(\lambda,\mu)\in\mathbb{C}$ be the convergence point of the sequence
 
 In colors (coloring with $n\mapsto|f_{\lambda,\mu}^n(c_1)-z_0|<\varepsilon$):
 
-$\mathcal{M}_2=\{(\lambda,\mu)\in\mathbb{R}^2|\,\, f_{\lambda,\mu}^{2n}(c_1)\rightarrow z_0\}.$
+$\mathbb{M}_2=\{(\lambda,\mu)\in\mathbb{R}^2|\,\, f_{\lambda,\mu}^{2n}(c_1)\rightarrow z_0\}.$
 
 In black:
 
@@ -745,7 +759,7 @@ where $q_c(z)=z^2+c$ and $z_c$ is an attracting fixed point of $q^2_c$.
 """
 
 # ╔═╡ 07765e47-4d63-4df8-ab8f-906d71a75338
-mandelbrot((c,z)->z^2+c, -2.01:0.002:0.51,-1.16:0.002:1.16, seed=0, colormap=:cubehelix, #vermeerx,
+mandelbrot((c,z)->z^2+c, -2.01:0.01:0.51,-1.16:0.01:1.16, seed=0, colormap=:cubehelix, #vermeerx,
 	hasescaped = (c,z) -> stops(z->z^2+c, z, 2, ε=0.00001) || abs2(z)>144, maxiterations=128,
 	depth_shift=1, interpolate=true, fxaa=true, ssao=true, # transparency=false, alpha=0.9, 
 	axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16), xticks=-2:0.25:0.5, yticks=-1:0.25:1, xgridcolor=RGBA(0.25,0.25,0.25,0.25), ygridcolor=RGBA(0.25,0.25,0.25,0.25), backgroundcolor=RGBA(1,1,1,0)))
@@ -776,7 +790,7 @@ Reference: Bulbs of period1 and 2 of the Mandelbrot set.
 """
 
 # ╔═╡ e23f79d7-5899-409b-b721-4bb06aac37b4
-mandelbrot((c,z)->z^2+c, -2.01:0.002:0.51,-1.16:0.002:1.16, seed=0, colormap=:cubehelix, #vermeerx,
+mandelbrot((c,z)->z^2+c, -2.01:0.01:0.51,-1.16:0.01:1.16, seed=0, colormap=:cubehelix, #vermeerx,
 	hasescaped = (c,z) -> stops(z->z^2+c, z, 2, ε=0.00001), maxiterations=128, #  || abs2(z)>144
 	depth_shift=1, interpolate=true, fxaa=true, ssao=true, # transparency=false, alpha=0.9, 
 	axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16), xticks=-2:0.25:0.5, yticks=-1:0.25:1, xgridcolor=RGBA(0.25,0.25,0.25,0.25), ygridcolor=RGBA(0.25,0.25,0.25,0.25), backgroundcolor=RGBA(1,1,1,0)))
@@ -853,7 +867,14 @@ end=#
 end=#
 
 # ╔═╡ ee95a23b-177b-474d-a517-5cc9204831dd
+md"""
+$\mathbb{E}_k=\{(\lambda,\mu)|\,\,f^n_{\lambda,\mu}(c_k)\rightarrow\{0,\infty\}\}$
+"""
 
+# ╔═╡ 5cc6c94c-fccf-4251-aaf3-0629f396457f
+md"""
+---
+"""
 
 # ╔═╡ fab68d9a-311d-451f-9289-caaec83569dc
 marcopoints = [[-20,0.25], [-10,0.25], [-5ℯ/2,0.25], [-2ℯ,0.25], [-3ℯ/2,0.25], [-5ℯ/4,0.25], [-9ℯ/8,0.25], 
@@ -881,17 +902,20 @@ let
 			xticks=xmin:0.5:xmax, xgridcolor=gridc,
 			yticks=ymin:0.5:ymax, ygridcolor=gridc)
 
-	mandelbrot!(ax,
+	plt = mandelbrot!(ax,
 		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
 		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
 		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.0000025), 
 		maxiterations=100, colormap=cm
 	)
+	translate!(plt, 0, 0, -1)
 
 	lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
 	scatter!(ax, Point2f.(marcopoints), color=1:length(marcopoints), colormap=:prism)
 	scatter!(ax, Point2f.(renatopoints), color=:green, marker=:cross, markersize=12)
 
+	#save("test.svg", fig)
+	
 	fig
 end
 
@@ -900,12 +924,18 @@ md"""
 ## Software Julia packages
 """
 
+# ╔═╡ 92366d0e-43c7-49c9-b78a-07ced091dcee
+CairoMakie.activate!(type = "png")
+
+# ╔═╡ 36239fa1-7865-4b54-bd6a-025c80bceae8
+#GLMakie.activate!()
+
 # ╔═╡ a07e4983-d801-47ba-9531-16bdfb1f5f26
 const Gr = SDDGraphics
 
 # ╔═╡ cd230555-d920-4eb7-863c-e4ef586e84a0
 let
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -6,0,0,6
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -943,7 +973,7 @@ let
 	text!(ax, Point2f(-5ℯ/8,5), text="(-5ℯ/8,5)",fontsize=fs, color=:red, 
 		  align = (:center,:bottom), markerspace=:data, offset=(0.0,0.05))
 
-	save("Conjecture_plot.jpg", fig)
+	#save("Conjecture_plot.jpg", fig)
 	
 	fig
 end
@@ -999,7 +1029,7 @@ end
 let
 	l,m = -1,0.25 # -4,4.5
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1059,7 +1089,7 @@ end
 let
 	l,m = -1,1-1/ℯ # -4,4.5
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1121,7 +1151,7 @@ end
 let
 	l,m = -1,0.771
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1182,7 +1212,7 @@ end
 let
 	l,m = -1,0.90975
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1245,7 +1275,7 @@ end
 let
 	l,m = -1,0.9375
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1306,7 +1336,7 @@ end
 let
 	l,m = -1,1
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1367,7 +1397,7 @@ end
 let
 	l,m = -1,1.9
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1428,7 +1458,7 @@ end
 let
 	l,m = -3ℯ/4,0.25
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1489,7 +1519,7 @@ end
 let
 	l,m = -ℯ,0.0625
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1550,7 +1580,7 @@ end
 let
 	l,m = -2.0794454,0.25
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1611,7 +1641,7 @@ end
 let
 	l,m = -ℯ,0.25
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1672,7 +1702,7 @@ end
 let
 	l,m = -3.3,0.25
 
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1733,7 +1763,7 @@ end
 let
 	l,m = -5ℯ/8,5
 
-	Npix = 1200
+	Npix = 400
 	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -1794,8 +1824,8 @@ end
 let
 	l,m = -9ℯ/8,4.75
 
-	Npix = 1200
-	xmin,xmax,ymin,ymax = -10,2,-12,12
+	Npix = 400
+	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
 	xs = xmin:Δ:xmax
@@ -1805,7 +1835,7 @@ let
 	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
 	gridc = RGBA(0.25,0.25,0.25,0.25)
 	
-	fig = Figure(size=(3Npix/4,Npix))
+	fig = Figure(size=(Npix,4Npix/3))
 	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
 			backgroundcolor=RGBA(1,1,1,0),
 			xticks=xmin:1:xmax, xgridcolor=gridc,
@@ -1855,8 +1885,8 @@ end
 let
 	l,m = -4ℯ/3,5.5
 
-	Npix = 1200
-	xmin,xmax,ymin,ymax = -10,2,-12,12
+	Npix = 400
+	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
 	xs = xmin:Δ:xmax
@@ -1866,7 +1896,7 @@ let
 	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
 	gridc = RGBA(0.25,0.25,0.25,0.25)
 	
-	fig = Figure(size=(3Npix/4,Npix))
+	fig = Figure(size=(Npix,4Npix/3))
 	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
 			backgroundcolor=RGBA(1,1,1,0),
 			xticks=xmin:1:xmax, xgridcolor=gridc,
@@ -1907,7 +1937,7 @@ let
 	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
     label = "Iterations", vertical = true, flipaxis = true)
 
-	save("DynPlane_l-3624_m55.jpg", fig)
+	#save("DynPlane_l-3624_m55.jpg", fig)
 	
 	fig
 end
@@ -1916,8 +1946,8 @@ end
 let
 	l,m = -3ℯ/16,5.5
 
-	Npix = 500
-	xmin,xmax,ymin,ymax = -10,2,-12,12
+	Npix = 400
+	xmin,xmax,ymin,ymax = -10,4,-12,12
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
 	xs = xmin:Δ:xmax
@@ -1927,7 +1957,7 @@ let
 	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
 	gridc = RGBA(0.25,0.25,0.25,0.25)
 	
-	fig = Figure(size=(3Npix/4,Npix))
+	fig = Figure(size=(Npix,4Npix/3))
 	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
 			backgroundcolor=RGBA(1,1,1,0),
 			xticks=xmin:1:xmax, xgridcolor=gridc,
@@ -1976,7 +2006,7 @@ end
 # ╔═╡ 99dc3a03-9aa0-4f52-8ed7-ffb4d4e5b538
 let
 	Npix = 400
-	xmin,xmax,ymin,ymax = -6,0,0,6
+	xmin,xmax,ymin,ymax = -24,0,0,24
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
 	xs = xmin:Δ:xmax
@@ -1988,7 +2018,7 @@ let
 	img = imgmandelbrot(
 		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
 		seed = lm -> findcritic1b(real(lm), imag(lm), maxiterations=20, ε=0.001),
-		hasescaped=(c,z)->abs(real(z))>16,
+		hasescaped=(c,z)-> abs(real(z))>16, # abs2(z)>10000,
 		maxiterations=maxits, colormap=cm
 	)
 
@@ -2019,76 +2049,14 @@ end
 
 # ╔═╡ 6b8acca5-4fd3-4812-a6c9-7f75f6b17b64
 mandelbrot(
-	(c,z)->z^2+c, -2.01:0.002:0.51,-1.16:0.002:1.16, seed=0, colormap=cuherx, 
+	(c,z)->z^2+c, -2.01:0.01:0.51,-1.16:0.01:1.16, seed=0, colormap=cuherx, 
 	hasescaped = (c,z) -> abs2(z)>4, maxiterations=48,
 	depth_shift=1, interpolate=true, fxaa=true, ssao=true, # transparency=false, alpha=0.9, 
 	axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16), xticks=-2:0.25:0.5, yticks=-1:0.25:1, xgridcolor=RGBA(0.25,0.25,0.25,0.25), ygridcolor=RGBA(0.25,0.25,0.25,0.25), backgroundcolor=RGBA(1,1,1,0)))
 
-# ╔═╡ 588fe168-3e87-42f2-bcc5-c3b666bba569
-let
-	Npix = 400
-	xmin,xmax,ymin,ymax = -21,0,0,7
-	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
-	Δ = min(Δx,Δy)
-	xs = xmin:Δ:xmax
-	ys = ymin:Δ:ymax
-
-	maxits = 100
-	cm = cuherx #_dark #vermeerx
-	gridc = RGBA(0.25,0.25,0.25,0.25)
-	
-	fig = Figure(size=(2Npix,3Npix/4))
-	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
-			backgroundcolor=RGBA(1,1,1,0),
-			xticks=xmin:1:xmax, xgridcolor=gridc,
-			yticks=ymin:1:ymax, ygridcolor=gridc)
-
-	function fX(lm::Number, z::Number)
-		mz = abs2(z)
-		fz = f(real(lm), imag(lm), z)
-		f2z = f2(real(lm), imag(lm), z)
-		mf2z = abs2(f2z)
-		if(real(fz)>real(z) && abs2(z-f2z)>mz)
-			#real(fz)>real(z) imag(fz)<-3pi mz < mf2z
-			return z
-		end
-		fz
-	end
-	
-	mandelbrot!(ax,
-		fX, #(lm,z) -> f(real(lm), imag(lm), z),
-		xs, ys,
-		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
-		hasescaped = (lm,z) -> abs2(z-f2(real(lm), imag(lm), z))<0.00001 && real(f(real(lm), imag(lm), z))<-16,
-			#|| abs2(z-f(real(lm), imag(lm), z))<0.0000025,
-				#real(z)<-16 || (abs(imag(z))>pi/2 && 0<real(z)<real(f(real(lm), imag(lm), z))), 
-		maxiterations=maxits, colormap=cm,
-		interpolate=true, fxaa=true, ssao=true, depth_shift=1
-	)
-
-	#=img = imgmandelbrot(
-		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
-		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
-		hasescaped = (lm,z) -> real(z)<-16 || (abs(imag(z))>pi/2 && 0<real(z)<real(f(real(lm), imag(lm), z))), 
-		maxiterations=maxits, colormap=cm
-	)=#
-	
-	#lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
-	scatter!(ax, [Point2f(-20,0.25)], markersize=12, color=:red)
-	text!(Point2f(-20,0.25), text="(-20,0.25)", color=:red, align = (:left,:bottom), fontsize=0.5,
-		markerspace= :data)	
-
-	Colorbar(fig[2, 1], limits = (1, maxits), colormap = cm,
-    label = "Iterations", vertical = false, flipaxis = false)
-
-	#save("BDomain_plot.jpg", fig)
-	
-	fig #, img
-end
-
 # ╔═╡ 35911590-c861-465d-921c-de93b66de7e7
 let
-	Npix = 1000
+	Npix = 400
 	xmin,xmax,ymin,ymax = -21,0,0,7
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -2127,18 +2095,54 @@ let
 	fig
 end
 
-# ╔═╡ fef962ec-4550-4a2f-bb28-5df9c7ced028
-mandelbrot((c,z)->z^2+c, -2.01:0.002:0.51,-1.16:0.002:1.16, seed=0, colormap=cuherx, #vermeerx,
-	hasescaped = (c,z) -> !stops(z->z^2+c, z, 2, ε=0.00001) && abs2(z)>144, maxiterations=48, #  || 
-	depth_shift=1, interpolate=true, fxaa=true, ssao=true, # transparency=false, alpha=0.9, 
-	axis=(;aspect=DataAspect(), limits=(-2.01,0.51,-1.16,1.16), xticks=-2:0.25:0.5, yticks=-1:0.25:1, xgridcolor=RGBA(0.25,0.25,0.25,0.25), ygridcolor=RGBA(0.25,0.25,0.25,0.25), backgroundcolor=RGBA(1,1,1,0)))
+# ╔═╡ 0fa4f0d0-a16a-43d9-96ba-ab35321b0fe4
+let
+	Npix = 400
+	xmin,xmax,ymin,ymax = -10,0,0,10
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 80
+	cm = cuherx
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+		
+	fig = Figure(size=(Npix,3Npix/4))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticN(2, real(lm), imag(lm), maxiterations=100, maxiterationscompass=24, ε=0.000001),
+		hasescaped = (lm,z) -> abs(real(z))>8 || abs2(z-f2(real(lm),imag(lm),z))<0.0000001,
+		maxiterations=maxits, colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	fs = 0.096
+	ms = 12
+	
+	#lines!(ax,[-ℯ,0],[0,1],color=:cadetblue,linewidth=1.75)
+	#text!(Point2f(-0.18,0.74), text=L"\mathcal{L}_{-1}",
+	#	  color=:dodgerblue4, align = (:center,:bottom), fontsize=fs, markerspace= :data, offset=(0.025,0.025))	
+	
+	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
+    	label = "Iterations", vertical = true, flipaxis = true)	
+	
+	#save("E2_plot.jpg", fig)
+	
+	fig
+end
 
 # ╔═╡ 0947a4b6-0309-4fea-bcab-7a3f0d036974
 cuhex = :cubehelix #pushfirst!(push!(RGBA.(colorschemes[:cubehelix].colors), RGBA(1,1,1,0.1)),RGBA(0,0,0,0.9))
 
 # ╔═╡ 74aa3553-400b-4df5-b053-7ee27338d8b6
 let
-	Npix = 1200
+	Npix = 400
 	xmin,xmax,ymin,ymax = -6,0,0,6
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -2180,7 +2184,7 @@ end
 
 # ╔═╡ 2176a612-f784-441b-8d44-ba132d5883b8
 let
-	Npix = 500
+	Npix = 400
 	xmin,xmax,ymin,ymax = -6,0,0,6
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -2222,7 +2226,7 @@ end
 
 # ╔═╡ a46480b9-1b34-4c81-82e1-be4af1ed3e05
 let
-	Npix = 1200
+	Npix = 400
 	xmin,xmax,ymin,ymax = -6,0,0,6
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -2264,7 +2268,7 @@ end
 
 # ╔═╡ 08e7bb0a-e954-46e0-9be8-eec3fce7d864
 let
-	Npix = 1200
+	Npix = 400
 	xmin,xmax,ymin,ymax = -6,0,0,6
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -2277,7 +2281,7 @@ let
 		
 	fig = Figure(size=(Npix,3Npix/4))
 	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
-			backgroundcolor=RGBA(1,1,1,0),
+			backgroundcolor=RGBA(1,1,1,0.5),
 			xticks=xmin:1:xmax, xgridcolor=gridc,
 			yticks=ymin:1:ymax, ygridcolor=gridc)
 
@@ -2306,7 +2310,7 @@ end
 
 # ╔═╡ 3d076c9b-263b-4d62-a17e-afbd7fee2f21
 let
-	Npix = 1200
+	Npix = 400
 	xmin,xmax,ymin,ymax = -3.5,0,0,2
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -2367,7 +2371,7 @@ let
 	Colorbar(fig[2, 1], limits = (1, maxits), colormap = cm,
     label = "Iterations", vertical = false, flipaxis = false)
 	
-	#save("Bifurcations_plot.jpg", fig)
+	#save("Bifurcations_plot.pdf", fig)
 	
 	fig
 end
@@ -2389,8 +2393,8 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╠═502034db-8faa-41ae-92be-c150305a1105
 # ╠═7e62773c-550b-483e-bf86-efed99abbbc6
 # ╠═3031e81a-5cd4-47f5-8d24-0d407ea29327
-# ╟─dbbdd5ab-3e34-4419-b4d4-a6d2d9d2f558
-# ╟─63987b6c-b0d6-4353-98af-c769dd7ca751
+# ╠═dbbdd5ab-3e34-4419-b4d4-a6d2d9d2f558
+# ╠═63987b6c-b0d6-4353-98af-c769dd7ca751
 # ╟─2f247a63-5943-49e7-a71e-f6d94af13181
 # ╠═75927946-3b6a-4a06-ba52-669066a434f5
 # ╠═6dce489a-ec3d-4907-b2b6-01e9043fe394
@@ -2403,7 +2407,7 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╠═e3130dbc-4b0d-4fa0-80a2-2980fd875d0b
 # ╠═e8e876c1-a196-406a-b444-a8618a208690
 # ╠═6b7870f5-a79d-416c-9a2d-6bd8a38e5fc5
-# ╟─4cc91117-7c7b-4e70-820c-aff85860ab02
+# ╠═4cc91117-7c7b-4e70-820c-aff85860ab02
 # ╟─208f363e-dc10-4307-aa27-3299ba2057a5
 # ╟─e410e775-a417-40a2-8dbf-4c9c5050eef7
 # ╟─70f58eb7-adc8-451c-94a6-11344bbb200b
@@ -2445,17 +2449,17 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╠═3ac65d1b-4be0-4a15-9679-1dc485fde018
 # ╟─2bb4db46-4d9c-4eb0-8ea9-99d95d2804fa
 # ╠═ac30ebe5-915b-4f2a-9634-912d4d7ad369
-# ╠═1a785d2a-b284-465c-9585-a4a17388d608
+# ╟─1a785d2a-b284-465c-9585-a4a17388d608
 # ╟─e17ec7eb-b95e-4e93-894c-3dab3cf26e10
 # ╠═9f02bbfc-d1c4-43d7-a940-a6b6a6b7305b
-# ╠═449ff397-4dbc-4163-b43f-2371e6c0b468
-# ╠═f51e3315-b30f-44d0-9ef3-23ec02c7bbdd
+# ╟─449ff397-4dbc-4163-b43f-2371e6c0b468
+# ╟─f51e3315-b30f-44d0-9ef3-23ec02c7bbdd
 # ╟─0dc154e3-b602-42be-9b56-3325f1961581
 # ╠═369f53e9-4ea9-4462-8297-ebb3fc381ffb
-# ╟─edf8fc8f-b6bd-4f29-af08-00039b30acd1
-# ╟─70a90845-4d5f-44e0-997b-4ff969b56346
+# ╠═edf8fc8f-b6bd-4f29-af08-00039b30acd1
+# ╠═70a90845-4d5f-44e0-997b-4ff969b56346
 # ╟─ffc2b1aa-c1d9-4c69-bccd-94d24b9744aa
-# ╠═cdf5ac1b-df7f-4270-8c67-1340e20861b4
+# ╟─cdf5ac1b-df7f-4270-8c67-1340e20861b4
 # ╠═99dc3a03-9aa0-4f52-8ed7-ffb4d4e5b538
 # ╟─0fd2c626-52e9-4f8c-8eac-64a2047d9729
 # ╟─6b8acca5-4fd3-4812-a6c9-7f75f6b17b64
@@ -2463,11 +2467,11 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╟─6e0bf940-1d94-4efa-a0a0-6558ba5d67fe
 # ╠═4c252064-eb11-485b-9607-01aaf84242bb
 # ╟─735528fa-e490-47ab-bc6c-bbba9b2fdac8
-# ╠═588fe168-3e87-42f2-bcc5-c3b666bba569
+# ╠═0ec76c85-d021-4a0b-8872-882c03f1a0d3
 # ╠═35911590-c861-465d-921c-de93b66de7e7
 # ╟─65365633-6555-4f3d-945b-66275dcf8c7b
 # ╟─fef962ec-4550-4a2f-bb28-5df9c7ced028
-# ╠═ffbacbc1-1b56-4b1f-93f1-0dce2f44bc9f
+# ╟─ffbacbc1-1b56-4b1f-93f1-0dce2f44bc9f
 # ╠═74aa3553-400b-4df5-b053-7ee27338d8b6
 # ╟─249dda01-d980-4cc6-86f0-1df2a31dd7d6
 # ╟─07765e47-4d63-4df8-ab8f-906d71a75338
@@ -2484,6 +2488,8 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╟─de1c003f-d951-47cf-acc3-beaea021298b
 # ╟─2c9f1a59-ad76-4476-8d32-7e158dcd2541
 # ╠═ee95a23b-177b-474d-a517-5cc9204831dd
+# ╠═0fa4f0d0-a16a-43d9-96ba-ab35321b0fe4
+# ╟─5cc6c94c-fccf-4251-aaf3-0629f396457f
 # ╠═fab68d9a-311d-451f-9289-caaec83569dc
 # ╠═d8613d71-af5e-4eb9-b065-b6467eae28b0
 # ╠═ee2b8e91-d405-4045-9287-e72daf20c7fd
@@ -2492,6 +2498,8 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╠═7a0d58fd-7238-4f0c-accf-9e429ca4d325
 # ╠═7af6c311-4ff3-4f71-84f0-8d9ef2d591c8
 # ╠═df10e677-8b09-473e-8b15-3ee063496f34
+# ╠═92366d0e-43c7-49c9-b78a-07ced091dcee
+# ╠═36239fa1-7865-4b54-bd6a-025c80bceae8
 # ╠═4b8a3a21-889f-4189-a6c5-e06014e1e8e0
 # ╠═4294274f-8874-4840-a241-0cce4969d5dd
 # ╠═a07e4983-d801-47ba-9531-16bdfb1f5f26

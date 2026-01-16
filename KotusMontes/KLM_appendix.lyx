@@ -30,7 +30,7 @@
 \output_sync 0
 \bibtex_command default
 \index_command default
-\float_placement h
+\float_placement tbh
 \float_alignment class
 \paperfontsize default
 \spacing single
@@ -243,6 +243,67 @@ nolink "false"
 \end_inset
 
 ).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename BDomainPlus_plot_light.jpg
+	lyxscale 25
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:M1"
+
+\end_inset
+
+The set 
+\begin_inset Formula $\mathbb{M}_{1}$
+\end_inset
+
+ drawn in black.
+ The other colors are determined by the escape time of the iterates 
+\begin_inset Formula $z_{n}=f_{\lambda,\mu}^{n}(c_{1})$
+\end_inset
+
+,
+ considering that 
+\begin_inset Formula $z_{n}$
+\end_inset
+
+ escapes when 
+\begin_inset Formula $Re(z)<-16$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -462,67 +523,6 @@ We know that
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement document
-alignment document
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename BDomainPlus_plot_light.jpg
-	lyxscale 25
-	width 100text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:M1"
-
-\end_inset
-
-The set 
-\begin_inset Formula $\mathbb{M}_{1}$
-\end_inset
-
- drawn in black.
- The other colors are determined by the escape time of the iterates 
-\begin_inset Formula $z_{n}=f_{\lambda,\mu}^{n}(c_{1})$
-\end_inset
-
-,
- considering that 
-\begin_inset Formula $z_{n}$
-\end_inset
-
- escapes when 
-\begin_inset Formula $Re(z)<-16$
-\end_inset
-
-.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \end_inset
 
 
@@ -1019,6 +1019,67 @@ Appendix:
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename E2_plot.jpg
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename E3_plot.jpg
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Conjecture1SetsE"
+
+\end_inset
+
+In colors (mainly white,
+ but not black),
+ the sets 
+\begin_inset Formula $\mathbb{E}_{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbb{E}_{3}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Let us recall that
 \begin_inset Formula 
 \[
@@ -1082,6 +1143,44 @@ If
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+To support Conjecture 1,
+ we observe that the sets
+\begin_inset Formula 
+\[
+\mathbb{E}_{k}=\left\{ (\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{n}(c_{k})\rightarrow\left\{ 0,\infty\right\} \right\} ,
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $c_{k}=c_{k}(\lambda,\mu)$
+\end_inset
+
+ is the critical point with 
+\begin_inset Formula $k>1$
+\end_inset
+
+,
+ appear to be 
+\begin_inset Formula $\mathbb{R}^{-}\times\mathbb{R}^{+}$
+\end_inset
+
+.
+ See 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:Conjecture1SetsE"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard

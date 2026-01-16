@@ -33,7 +33,7 @@ Manifest*.toml
 LocalPreferences.toml
 JuliaLocalPreferences.toml
 
-# Document files
+# Temopral document files
 ~*
 *~
 
@@ -45,3 +45,6 @@ JuliaLocalPreferences.toml
 *.tar
 *.tar.gz
 *.tar.bz
+
+# Generated material
+generated/
