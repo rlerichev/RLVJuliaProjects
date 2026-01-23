@@ -88,6 +88,108 @@
 
 \begin_body
 
+\begin_layout Section*
+Notation
+\end_layout
+
+\begin_layout Standard
+Notation used,
+ and in many cases defined,
+ in the article...
+ except for 
+\begin_inset Formula $Crit(f_{\lambda,\mu})$
+\end_inset
+
+.
+\begin_inset Formula 
+\[
+\begin{array}{lcl}
+\mathbb{C} & := & \mathrm{Complex\,plane}\\
+\bar{\mathbb{C}} & := & \mathrm{Riemann\,sphere}\\
+J(f) & := & \mathrm{Julia\,set}\\
+F(f) & := & \mathrm{Fatou\,set}\\
+\mathcal{M} & := & \mathrm{Meromorphic\,class}\\
+\mathcal{S} & := & \mathrm{Speisser\,class}\\
+\mathcal{B} & := & \mathrm{Eremenko-Lyubich\,class}\\
+f_{\lambda,\mu}(z) & := & \lambda e^{z}+\frac{\mu}{z}\\
+f & := & f_{-20,1/4}\,\mathrm{[Theorem\,A]}\\
+\mathcal{D} & := & \{(\lambda,\mu)\in\mathbb{C}^{2}:\,Re(\lambda)<0\,\,\text{and}\,\,|Im(\lambda)|<\frac{1}{2}|Re(\lambda)|,\,\,\mu\neq0\}\\
+\mathcal{D}' & := & \mathbb{R}^{-}\times\mathbb{R}^{+}\\
+F_{0} & := & \mathrm{Baker\,domain\,with\,}0\in\partial F_{0}\\
+F_{\infty} & := & f_{\lambda,\mu}(F_{0})\\
+Crit(f_{\lambda,\mu}) & := & \left\{ c\in\mathbb{C}:\,f'_{\lambda,\mu}(c)=0\right\} \\
+c_{1} & := & c_{1}(\lambda,\mu)\in Crit(f_{\lambda,\mu})\,\mathrm{with\,minimal\,module\,and\,}Re(c_{1})>0\\
+c_{-1} & := & \overline{c_{1}}\\
+c_{k} & := & c_{k}(\lambda,\mu)\in Crit(f_{\lambda,\mu})-\left\{ c_{1},c_{-1}\right\} ,\,k\in\mathbb{Z}-\left\{ 1,0,-1\right\} \\
+c_{-k} & := & \overline{c_{k}}\\
+U & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,F_{0},F_{\infty}\,\mathrm{are\,infinitely\,connected}\right\} \,\mathrm{[Theorem\,B]}\\
+A & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,F_{0},F_{\infty}\,\mathrm{are\,simply\,connected,\,}|Per_{attr}(f_{\lambda,\mu})|=4,\,\mathrm{and}\,\text{f_{\lambda,\mu}^{N}}(c_{k})\in F_{\infty}\right\} \,\mathrm{[Theorem\,C]}\\
+\mathbb{B} & := & \{(\lambda,\mu)\in\mathcal{D}':\,F_{0}\cap Crit(f_{\lambda,\mu})\neq\emptyset\}\,\mathrm{[Proof\,Theorem\,B]}\\
+B & := & \mathrm{Component\,of\,}\mathbb{B}\,\mathrm{such\,that\,}(-20,1/4)\in B\\
+B((\lambda_{0},\mu_{0}),r) & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,||(\lambda,\mu)-(\lambda_{0},\mu_{0})||<r\right\} 
+\end{array}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note:
+ Somewhat confusing notation for 
+\begin_inset Formula $B$
+\end_inset
+
+:
+ Component and ball!
+ Suggestion:
+ Replace 
+\begin_inset Formula $B((\lambda_{0},\mu_{0}),r)$
+\end_inset
+
+ with 
+\begin_inset Formula $D((\lambda_{0},\mu_{0}),r)$
+\end_inset
+
+,
+ or change the name of component 
+\begin_inset Formula $B$
+\end_inset
+
+...
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+New notation (can be improved...
+ must be improved)
+\begin_inset Formula 
+\[
+\begin{array}{lcl}
+\mathbb{M} & := & \mathrm{Mandelbrot\,set}=\left\{ c\in\mathbb{C}:\,o(0,q_{c})\,\,\mathrm{is\,bounded}\right\} =\left\{ c\in\mathbb{C}:\,J(q_{c})\,\,\mathrm{is\,connected}\right\} \\
+\mathbb{M}_{1} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,o(c_{1},f_{\lambda,\mu})\,\,\mathrm{is\,bounded}\right\} \\
+\mathbb{M}_{2} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\right\} ,\,\mathrm{where}\,z_{0}\in\mathbb{C}\cup\left\{ \infty\right\} \\
+\mathbb{M}_{2,z_{0}\neq0} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\right\} ,\,\mathrm{where}\,z_{0}\in\mathbb{C}-\left\{ 0\right\} ,\,\mathrm{"finite\,bulbs"\,of\,period\,}2\\
+\mathbb{M}_{2,z_{0}=0} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0\right\} ,\,\mathrm{"Baker\,bulb"}\\
+\mathbb{M}_{2,z_{0}=\infty} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow\infty\right\} ,\,\mathrm{"Baker\,bulb"}\\
+\mathbb{M}_{2,z_{0}\in\left\{ 0,\infty\right\} } & := & \mathbb{M}_{2,z_{0}=0}\cup\mathbb{M}_{2,z_{0}=\infty}\\
+\mathbb{E}_{k} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{k})\rightarrow\infty\right\} 
+\end{array}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Bifurcations...
+\end_layout
+
 \begin_layout Standard
 For the section of bifurcations...
 \end_layout
@@ -103,7 +205,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Bifurcations_plot.jpg
+	filename generated/Bifurcations_plot.jpg
 	lyxscale 50
 	width 100text%
 
@@ -155,7 +257,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Mandelbrot_ref1.png
+	filename generated/Mandelbrot_ref1.png
 	lyxscale 50
 	width 75text%
 
@@ -256,7 +358,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename BDomainPlus_plot_light.jpg
+	filename generated/BDomainPlus_plot_light.jpg
 	lyxscale 25
 	width 100text%
 
@@ -290,7 +392,11 @@ The set
 \end_inset
 
  escapes when 
-\begin_inset Formula $Re(z)<-16$
+\begin_inset Formula $|z_{n}-f_{\lambda,\mu}^{2}(z_{n})|<10^{-6}$
+\end_inset
+
+ and 
+\begin_inset Formula $Re(f_{\lambda,\mu}(z_{n}))<-16$
 \end_inset
 
 .
@@ -567,7 +673,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Mandelbrot_ref3.png
+	filename generated/Mandelbrot_ref3.png
 	lyxscale 50
 	width 50text%
 
@@ -575,7 +681,7 @@ status open
 
 
 \begin_inset Graphics
-	filename Mandelbrot_ref2.png
+	filename generated/Mandelbrot_ref2.png
 	lyxscale 50
 	width 50text%
 
@@ -735,7 +841,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename BulbsPer2_plot.jpg
+	filename generated/BulbsPer2_plot.jpg
 	lyxscale 50
 	width 75text%
 
@@ -801,7 +907,7 @@ The bulbs of period
 
 \begin_layout Standard
 Let 
-\begin_inset Formula $z_{0}=z_{0}(\lambda,\mu)\in\mathbb{C}$
+\begin_inset Formula $z_{0}=z_{0}(\lambda,\mu)\in\bar{\mathbb{C}}$
 \end_inset
 
  be the convergence point of the sequence 
@@ -818,11 +924,17 @@ Let
 \begin_inset Formula $z_{0}$
 \end_inset
 
- is attractor) or 
+ is attractor),
+ or 
 \begin_inset Formula $z_{0}=0$
 \end_inset
 
- (the pole).
+ (the pole),
+ or 
+\begin_inset Formula $z_{0}=\infty$
+\end_inset
+
+.
  We define 
 \begin_inset Formula 
 \[
@@ -844,12 +956,12 @@ which represents the bulbs of period
 \begin_inset Quotes eld
 \end_inset
 
-Baker bulb
+Baker bulbs
 \begin_inset Quotes erd
 \end_inset
 
  corresponding to the parameters for which 
-\begin_inset Formula $f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0$
+\begin_inset Formula $f_{\lambda,\mu}^{2n}(c_{1})\rightarrow\left\{ 0,\infty\right\} $
 \end_inset
 
 .
@@ -878,7 +990,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename BulbsPer2Finite_plot.jpg
+	filename generated/BulbsPer2Finite_plot.jpg
 	lyxscale 50
 	width 50text%
 
@@ -886,7 +998,7 @@ status open
 
 
 \begin_inset Graphics
-	filename BulbBaker_plot.jpg
+	filename generated/BulbBaker_plot.jpg
 	lyxscale 50
 	width 50text%
 
@@ -924,15 +1036,82 @@ At left
 \begin_inset Quotes eld
 \end_inset
 
-Baker bulb
+Baker bulbs
 \begin_inset Quotes erd
 \end_inset
 
  
-\begin_inset Formula $\mathbb{M}_{2,z_{0}=0}$
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=0}\cup\mathbb{M}_{2,z_{0}=\infty}$
 \end_inset
 
 .
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename generated/BulbBakerInf1_plot.jpg
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename generated/BulbBakerInf2_plot.jpg
+	lyxscale 50
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:M2Bulbs2"
+
+\end_inset
+
+The 
+\begin_inset Quotes eld
+\end_inset
+
+Baker bulbs
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=\infty}$
+\end_inset
+
+ (left) and 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=0}$
+\end_inset
+
+ (right).
 \end_layout
 
 \end_inset
@@ -960,17 +1139,17 @@ Naturally,
 \begin_inset Quotes eld
 \end_inset
 
-Baker bulb
+Baker bulbs
 \begin_inset Quotes erd
 \end_inset
 
- set:
+ sets:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\ensuremath{\mathbb{M}_{2,z_{0}\neq0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\neq0\}\subset\mathcal{M}_{2},}
+\ensuremath{\mathbb{M}_{2,z_{0}\neq0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\neq0\}\subset\mathbb{M}_{2},}
 \]
 
 \end_inset
@@ -981,7 +1160,18 @@ Baker bulb
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\ensuremath{\mathbb{M}_{2,z_{0}=0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0\}\subset\mathcal{M}_{2}.}
+\ensuremath{\mathbb{M}_{2,z_{0}=0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0\}\subset\mathbb{M}_{2}.}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ensuremath{\mathbb{M}_{2,z_{0}=\infty}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow\infty\}\subset\mathbb{M}_{2}.}
 \]
 
 \end_inset
@@ -1001,10 +1191,32 @@ nolink "false"
 
 \end_inset
 
+ and 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "fig:M2Bulbs2"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
  for drawings of 
 \begin_inset Formula $\mathbb{M}_{2,z_{0}\neq0}$
 \end_inset
 
+,
+ 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=0}\cup\mathbb{M}_{2,z_{0}=\infty}$
+\end_inset
+
+,
+ 
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=\infty}$
+\end_inset
+
+,
  and 
 \begin_inset Formula $\mathbb{M}_{2,z_{0}=0}$
 \end_inset
@@ -1029,7 +1241,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename E2_plot.jpg
+	filename generated/E2_plot.jpg
 	lyxscale 50
 	width 50text%
 
@@ -1037,7 +1249,7 @@ status open
 
 
 \begin_inset Graphics
-	filename E3_plot.jpg
+	filename generated/E3_plot.jpg
 	lyxscale 50
 	width 50text%
 
@@ -1236,7 +1448,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Conjecture_plot.jpg
+	filename generated/Conjecture_plot.jpg
 	lyxscale 50
 	width 75text%
 
@@ -1288,7 +1500,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename DynPlane_l-1698_m5.jpg
+	filename generated/DynPlane_l-1698_m5.jpg
 	lyxscale 50
 	width 75text%
 
@@ -1349,7 +1561,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename DynPlane_l-3058_m475.jpg
+	filename generated/DynPlane_l-3058_m475.jpg
 	lyxscale 50
 	width 75text%
 
@@ -1410,7 +1622,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename DynPlane_l-3624_m55.jpg
+	filename generated/DynPlane_l-3624_m55.jpg
 	lyxscale 50
 	width 75text%
 
@@ -1598,7 +1810,7 @@ Conjecture 4.
 \end_inset
 
  is a family of quadratic-like maps in a set of parameters 
-\begin_inset Formula $Q\subset[-4.5,-3.5]\times[4,5]$
+\begin_inset Formula $Q_{1}\subset[-4.5,-3.5]\times[4,5]\subset\mathcal{D}'$
 \end_inset
 
 .
@@ -1613,7 +1825,11 @@ Conjecture 5.
 \end_layout
 
 \begin_layout Standard
-There are infinite many subsets of parameters for which 
+There are infinite many disjoint subsets 
+\begin_inset Formula $Q_{k}$
+\end_inset
+
+ of parameters for which 
 \begin_inset Formula $f_{\lambda,\mu}$
 \end_inset
 

@@ -734,7 +734,7 @@ Reference: Mandelbrot set.
 
 # ╔═╡ ffbacbc1-1b56-4b1f-93f1-0dce2f44bc9f
 md"""
-Let $z_0=z_0(\lambda,\mu)\in\mathbb{C}$ be the convergence point of the sequence $f_{\lambda,\mu}^{2n}(c_1)$, such that $|(f_{\lambda,\mu}^{2n})'(z_0)|<1$ or $z_0=0$.
+Let $z_0=z_0(\lambda,\mu)\in\mathbb{C}$ be the convergence point of the sequence $f_{\lambda,\mu}^{2n}(c_1)$, such that $|(f_{\lambda,\mu}^{2n})'(z_0)|<1$, or $z_0=0$, or $z_0\rightarrow\infty$.
 
 In colors (coloring with $n\mapsto|f_{\lambda,\mu}^n(c_1)-z_0|<\varepsilon$):
 
@@ -744,7 +744,7 @@ In black:
 
 $\mathbb{R}^2-\mathcal{M}_2.$
 
-In red, the line of parameters where $f_{\lambda,\mu}$ has fixed parabolic points with multiplier $-1$:
+In light blue, the line of parameters where $f_{\lambda,\mu}$ has fixed parabolic points with multiplier $-1$:
 
 $\mathcal{L}_{-1}=\{(\lambda,\mu)\in\mathbb{R}^2|\,\,\exists z:\,\,f_{\lambda,\mu}(z)=z,\,\,f'_{\lambda,\mu}(z)=-1\}.$
 """
@@ -886,7 +886,7 @@ renatopoints = [[-3ℯ/2,4.5], [-4.05,4.75], [-2ℯ,2], [-ℯ,0.0625], [-3ℯ/4,
 
 # ╔═╡ ee2b8e91-d405-4045-9287-e72daf20c7fd
 let
-	Npix = 600
+	Npix = 300
 	xmin,xmax,ymin,ymax = -6,0,0,6
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -925,10 +925,10 @@ md"""
 """
 
 # ╔═╡ 92366d0e-43c7-49c9-b78a-07ced091dcee
-CairoMakie.activate!(type = "png")
+#CairoMakie.activate!(type = "png")
 
 # ╔═╡ 36239fa1-7865-4b54-bd6a-025c80bceae8
-#GLMakie.activate!()
+GLMakie.activate!()
 
 # ╔═╡ a07e4983-d801-47ba-9531-16bdfb1f5f26
 const Gr = SDDGraphics
@@ -2076,7 +2076,7 @@ let
 	mandelbrot!(ax,
 		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
 		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
-		hasescaped = (lm,z) -> abs2(z-f2(real(lm), imag(lm), z))<0.0000025 && real(f(real(lm), imag(lm), z))<-16,
+		hasescaped = (lm,z) -> abs2(z-f2(real(lm), imag(lm), z))<0.00001 && real(f(real(lm), imag(lm), z))<-16,
 				#stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.0000025) && real(f(real(lm), imag(lm), z))<-16, 
 		maxiterations=maxits, colormap=cm,
 		interpolate=true, fxaa=true, ssao=true, depth_shift=1
@@ -2204,7 +2204,7 @@ let
 	mandelbrot!(ax,
 		(lm,z) -> f2(real(lm), imag(lm), z), xs, ys,
 		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
-		hasescaped = (lm,z) -> stops(z->f2(real(lm), imag(lm), z), z, 2, ε=0.0000025), 
+		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 1, ε=0.0000025), 
 		maxiterations=maxits, colormap=cm,
 		interpolate=true, fxaa=true, ssao=true, depth_shift=1
 	)
@@ -2304,6 +2304,90 @@ let
     	label = "Iterations", vertical = true, flipaxis = true)	
 	
 	#save("BulbBaker_plot.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ 05a11fcd-afe9-4f9e-9e3d-b8d698085bf6
+let
+	Npix = 400
+	xmin,xmax,ymin,ymax = -6,0,0,6
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 60
+	cm = cuhex #vermeerx
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+		
+	fig = Figure(size=(Npix,3Npix/4))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	mandelbrot!(ax,
+		(lm,z) -> f2(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		hasescaped = (lm,z) -> real(f(real(lm), imag(lm), z))<-16,
+		maxiterations=maxits, colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	fs = 0.096
+	ms = 12
+	
+	lines!(ax,[-ℯ,0],[0,1],color=:cadetblue,linewidth=1.75)
+	text!(Point2f(-0.18,0.74), text=L"\mathcal{L}_{-1}",
+		  color=:dodgerblue4, align = (:center,:bottom), fontsize=fs, markerspace= :data, offset=(0.025,0.025))	
+	
+	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
+    	label = "Iterations", vertical = true, flipaxis = true)	
+	
+	#save("BulbBakerInf1_plot.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ cec5a4bd-a6ba-4fe9-be63-ed6322e0f8c1
+let
+	Npix = 400
+	xmin,xmax,ymin,ymax = -6,0,0,6
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 60
+	cm = cuhex #vermeerx
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+		
+	fig = Figure(size=(Npix,3Npix/4))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	mandelbrot!(ax,
+		(lm,z) -> f2(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		hasescaped = (lm,z) -> real(z)<-16,
+		maxiterations=maxits, colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	fs = 0.096
+	ms = 12
+	
+	lines!(ax,[-ℯ,0],[0,1],color=:cadetblue,linewidth=1.75)
+	text!(Point2f(-0.18,0.74), text=L"\mathcal{L}_{-1}",
+		  color=:dodgerblue4, align = (:center,:bottom), fontsize=fs, markerspace= :data, offset=(0.025,0.025))	
+	
+	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
+    	label = "Iterations", vertical = true, flipaxis = true)	
+	
+	#save("BulbBakerInf2_plot.jpg", fig)
 	
 	fig
 end
@@ -2481,7 +2565,9 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╠═a46480b9-1b34-4c81-82e1-be4af1ed3e05
 # ╟─ab526193-7dfd-4e82-a397-beb7e2fd6c93
 # ╟─e23f79d7-5899-409b-b721-4bb06aac37b4
-# ╠═08e7bb0a-e954-46e0-9be8-eec3fce7d864
+# ╟─08e7bb0a-e954-46e0-9be8-eec3fce7d864
+# ╟─05a11fcd-afe9-4f9e-9e3d-b8d698085bf6
+# ╟─cec5a4bd-a6ba-4fe9-be63-ed6322e0f8c1
 # ╟─40f1cf47-2b5c-4d9e-bc8b-10ca781dffcc
 # ╠═3d076c9b-263b-4d62-a17e-afbd7fee2f21
 # ╟─05efe4d3-4126-449a-ac48-1799c4c2f28a
@@ -2492,7 +2578,7 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╟─5cc6c94c-fccf-4251-aaf3-0629f396457f
 # ╠═fab68d9a-311d-451f-9289-caaec83569dc
 # ╠═d8613d71-af5e-4eb9-b065-b6467eae28b0
-# ╠═ee2b8e91-d405-4045-9287-e72daf20c7fd
+# ╟─ee2b8e91-d405-4045-9287-e72daf20c7fd
 # ╠═cd230555-d920-4eb7-863c-e4ef586e84a0
 # ╠═d52d0e77-9a16-4163-b2ef-10779cd1cdff
 # ╠═7a0d58fd-7238-4f0c-accf-9e429ca4d325

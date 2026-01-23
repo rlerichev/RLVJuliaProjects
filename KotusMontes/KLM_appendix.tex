@@ -4,6 +4,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{refstyle}
+\usepackage{amstext}
 \usepackage{amssymb}
 \usepackage{graphicx}
 
@@ -30,11 +31,65 @@
 \deactivatequoting
 
 \begin{document}
+
+\section*{Notation}
+
+Notation used, and in many cases defined, in the article... except
+for $Crit(f_{\lambda,\mu})$.
+\[
+\begin{array}{lcl}
+\mathbb{C} & := & \mathrm{Complex\,plane}\\
+\bar{\mathbb{C}} & := & \mathrm{Riemann\,sphere}\\
+J(f) & := & \mathrm{Julia\,set}\\
+F(f) & := & \mathrm{Fatou\,set}\\
+\mathcal{M} & := & \mathrm{Meromorphic\,class}\\
+\mathcal{S} & := & \mathrm{Speisser\,class}\\
+\mathcal{B} & := & \mathrm{Eremenko-Lyubich\,class}\\
+f_{\lambda,\mu}(z) & := & \lambda e^{z}+\frac{\mu}{z}\\
+f & := & f_{-20,1/4}\,\mathrm{[Theorem\,A]}\\
+\mathcal{D} & := & \{(\lambda,\mu)\in\mathbb{C}^{2}:\,Re(\lambda)<0\,\,\text{and}\,\,|Im(\lambda)|<\frac{1}{2}|Re(\lambda)|,\,\,\mu\neq0\}\\
+\mathcal{D}' & := & \mathbb{R}^{-}\times\mathbb{R}^{+}\\
+F_{0} & := & \mathrm{Baker\,domain\,with\,}0\in\partial F_{0}\\
+F_{\infty} & := & f_{\lambda,\mu}(F_{0})\\
+Crit(f_{\lambda,\mu}) & := & \left\{ c\in\mathbb{C}:\,f'_{\lambda,\mu}(c)=0\right\} \\
+c_{1} & := & c_{1}(\lambda,\mu)\in Crit(f_{\lambda,\mu})\,\mathrm{with\,minimal\,module\,and\,}Re(c_{1})>0\\
+c_{-1} & := & \overline{c_{1}}\\
+c_{k} & := & c_{k}(\lambda,\mu)\in Crit(f_{\lambda,\mu})-\left\{ c_{1},c_{-1}\right\} ,\,k\in\mathbb{Z}-\left\{ 1,0,-1\right\} \\
+c_{-k} & := & \overline{c_{k}}\\
+U & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,F_{0},F_{\infty}\,\mathrm{are\,infinitely\,connected}\right\} \,\mathrm{[Theorem\,B]}\\
+A & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,F_{0},F_{\infty}\,\mathrm{are\,simply\,connected,\,}|Per_{attr}(f_{\lambda,\mu})|=4,\,\mathrm{and}\,\text{\ensuremath{f_{\lambda,\mu}^{N}}}(c_{k})\in F_{\infty}\right\} \,\mathrm{[Theorem\,C]}\\
+\mathbb{B} & := & \{(\lambda,\mu)\in\mathcal{D}':\,F_{0}\cap Crit(f_{\lambda,\mu})\neq\emptyset\}\,\mathrm{[Proof\,Theorem\,B]}\\
+B & := & \mathrm{Component\,of\,}\mathbb{B}\,\mathrm{such\,that\,}(-20,1/4)\in B\\
+B((\lambda_{0},\mu_{0}),r) & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,||(\lambda,\mu)-(\lambda_{0},\mu_{0})||<r\right\} 
+\end{array}
+\]
+
+Note: Somewhat confusing notation for $B$: Component and ball! Suggestion:
+Replace $B((\lambda_{0},\mu_{0}),r)$ with $D((\lambda_{0},\mu_{0}),r)$,
+or change the name of component $B$...\\
+
+New notation (can be improved... must be improved)
+\[
+\begin{array}{lcl}
+\mathbb{M} & := & \mathrm{Mandelbrot\,set}=\left\{ c\in\mathbb{C}:\,o(0,q_{c})\,\,\mathrm{is\,bounded}\right\} =\left\{ c\in\mathbb{C}:\,J(q_{c})\,\,\mathrm{is\,connected}\right\} \\
+\mathbb{M}_{1} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,o(c_{1},f_{\lambda,\mu})\,\,\mathrm{is\,bounded}\right\} \\
+\mathbb{M}_{2} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\right\} ,\,\mathrm{where}\,z_{0}\in\mathbb{C}\cup\left\{ \infty\right\} \\
+\mathbb{M}_{2,z_{0}\neq0} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\right\} ,\,\mathrm{where}\,z_{0}\in\mathbb{C}-\left\{ 0\right\} ,\,\mathrm{"finite\,bulbs"\,of\,period\,}2\\
+\mathbb{M}_{2,z_{0}=0} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0\right\} ,\,\mathrm{"Baker\,bulb"}\\
+\mathbb{M}_{2,z_{0}=\infty} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow\infty\right\} ,\,\mathrm{"Baker\,bulb"}\\
+\mathbb{M}_{2,z_{0}\in\left\{ 0,\infty\right\} } & := & \mathbb{M}_{2,z_{0}=0}\cup\mathbb{M}_{2,z_{0}=\infty}\\
+\mathbb{E}_{k} & := & \left\{ (\lambda,\mu)\in\mathcal{D}':\,f_{\lambda,\mu}^{2n}(c_{k})\rightarrow\infty\right\} 
+\end{array}
+\]
+
+
+\section*{Bifurcations...}
+
 For the section of bifurcations...
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=1\textwidth]{Bifurcations_plot}
+\includegraphics[width=1\textwidth]{generated/Bifurcations_plot}
 \par\end{centering}
 \caption{Some bifurcations and $\mathbb{M}_{2,z_{0}\protect\neq0}$.}\label{fig:M2BifParams}
 \end{figure}
@@ -44,7 +99,7 @@ For the section of bifurcations...
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=0.75\textwidth]{Mandelbrot_ref1}
+\includegraphics[width=0.75\textwidth]{generated/Mandelbrot_ref1}
 \par\end{centering}
 \caption{$\mathbb{M}$, the Mandelbrot set, drawn in black. The other colors
 are determined by the escape time of the iterates $z_{n}=q_{c}^{n}(0)$,
@@ -62,11 +117,12 @@ time is commonly used to draw the Mandelbrot set (see \figref{TheMandelbrot}).
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=1\textwidth]{BDomainPlus_plot_light}
+\includegraphics[width=1\textwidth]{generated/BDomainPlus_plot_light}
 \par\end{centering}
 \caption{The set $\mathbb{M}_{1}$ drawn in black. The other colors are determined
 by the escape time of the iterates $z_{n}=f_{\lambda,\mu}^{n}(c_{1})$,
-considering that $z_{n}$ escapes when $Re(z)<-16$.}\label{fig:M1}
+considering that $z_{n}$ escapes when $|z_{n}-f_{\lambda,\mu}^{2}(z_{n})|<10^{-6}$
+and $Re(f_{\lambda,\mu}(z_{n}))<-16$.}\label{fig:M1}
 \end{figure}
 
 The family $f_{\lambda,\mu}$ does not have a unique set of critical
@@ -121,7 +177,7 @@ family $f_{\lambda,\mu}$ (see \figref{M1}):
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=0.5\textwidth]{Mandelbrot_ref3}\includegraphics[width=0.5\textwidth]{Mandelbrot_ref2}
+\includegraphics[width=0.5\textwidth]{generated/Mandelbrot_ref3}\includegraphics[width=0.5\textwidth]{generated/Mandelbrot_ref2}
 \par\end{centering}
 \caption{At left, the bulbs of period $1$ and $2$ of the Mandelbrot set
 $\mathbb{M}$. At right, the bulbs of period $1$ and $2$, and the
@@ -141,7 +197,7 @@ points are coloring according to $n$. See \figref{TheMandelbrot2}.
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=0.75\textwidth]{BulbsPer2_plot}
+\includegraphics[width=0.75\textwidth]{generated/BulbsPer2_plot}
 \par\end{centering}
 \caption{The bulbs of period $1$ and $2$, and the bulb associated to the
 Baker domain $F_{0}$ of the set $\mathbb{M}_{2}$, are drawn with
@@ -150,43 +206,57 @@ corresponding to parameters for which $f_{\lambda,\mu}$ has a fixed
 parabolic point with multiplier equal to $-1$.}\label{fig:M2}
 \end{figure}
 
-Let $z_{0}=z_{0}(\lambda,\mu)\in\mathbb{C}$ be the convergence point
-of the sequence $f_{\lambda,\mu}^{2n}(c_{1})$, such that $|(f_{\lambda,\mu}^{2n})'(z_{0})|<1$
-(that is, $z_{0}$ is attractor) or $z_{0}=0$ (the pole). We define
+Let $z_{0}=z_{0}(\lambda,\mu)\in\bar{\mathbb{C}}$ be the convergence
+point of the sequence $f_{\lambda,\mu}^{2n}(c_{1})$, such that $|(f_{\lambda,\mu}^{2n})'(z_{0})|<1$
+(that is, $z_{0}$ is attractor), or $z_{0}=0$ (the pole), or $z_{0}=\infty$.
+We define 
 \[
 \ensuremath{\mathbb{M}_{2}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\}},
 \]
 which represents the bulbs of period $1$ and $2$, and also the ``Baker
-bulb'' corresponding to the parameters for which $f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0$.
+bulbs'' corresponding to the parameters for which $f_{\lambda,\mu}^{2n}(c_{1})\rightarrow\left\{ 0,\infty\right\} $.
 See \figref{M2}.
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=0.5\textwidth]{BulbsPer2Finite_plot}\includegraphics[width=0.5\textwidth]{BulbBaker_plot}
+\includegraphics[width=0.5\textwidth]{generated/BulbsPer2Finite_plot}\includegraphics[width=0.5\textwidth]{generated/BulbBaker_plot}
 \par\end{centering}
 \caption{At left $\mathbb{M}_{2,z_{0}\protect\neq0}$, the bulbs of period
-$1$ and $2$. At right, the ``Baker bulb'' $\mathbb{M}_{2,z_{0}=0}$.}\label{fig:M2Bulbs}
+$1$ and $2$. At right, the ``Baker bulbs'' $\mathbb{M}_{2,z_{0}=0}\cup\mathbb{M}_{2,z_{0}=\infty}$.}\label{fig:M2Bulbs}
+\end{figure}
+
+\begin{figure}[tbh]
+\begin{centering}
+\includegraphics[width=0.5\textwidth]{generated/BulbBakerInf1_plot}\includegraphics[width=0.5\textwidth]{generated/BulbBakerInf2_plot}
+\par\end{centering}
+\caption{The ``Baker bulbs'' $\mathbb{M}_{2,z_{0}=\infty}$ (left) and $\mathbb{M}_{2,z_{0}=0}$
+(right).}\label{fig:M2Bulbs2}
 \end{figure}
 
 Naturally, one can differentiate the set of bulbs of period $1$ and
-$2$, and the ``Baker bulb'' set:
+$2$, and the ``Baker bulbs'' sets:
 
 \[
-\ensuremath{\mathbb{M}_{2,z_{0}\neq0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\neq0\}\subset\mathcal{M}_{2},}
+\ensuremath{\mathbb{M}_{2,z_{0}\neq0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow z_{0}\neq0\}\subset\mathbb{M}_{2},}
 \]
 
 \[
-\ensuremath{\mathbb{M}_{2,z_{0}=0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0\}\subset\mathcal{M}_{2}.}
+\ensuremath{\mathbb{M}_{2,z_{0}=0}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow0\}\subset\mathbb{M}_{2}.}
 \]
 
-See \figref{M2Bulbs} for drawings of $\mathbb{M}_{2,z_{0}\neq0}$
+\[
+\ensuremath{\mathbb{M}_{2,z_{0}=\infty}=\{(\lambda,\mu)\in\mathbb{R}^{-}\times\mathbb{R}^{+}|\,\,f_{\lambda,\mu}^{2n}(c_{1})\rightarrow\infty\}\subset\mathbb{M}_{2}.}
+\]
+
+See \figref{M2Bulbs} and \figref{M2Bulbs2} for drawings of $\mathbb{M}_{2,z_{0}\neq0}$,
+$\mathbb{M}_{2,z_{0}=0}\cup\mathbb{M}_{2,z_{0}=\infty}$, $\mathbb{M}_{2,z_{0}=\infty}$,
 and $\mathbb{M}_{2,z_{0}=0}$. 
 
 \section*{Appendix: Conjectures}
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=0.5\textwidth]{E2_plot}\includegraphics[width=0.5\textwidth]{E3_plot}
+\includegraphics[width=0.5\textwidth]{generated/E2_plot}\includegraphics[width=0.5\textwidth]{generated/E3_plot}
 \par\end{centering}
 \caption{In colors (mainly white, but not black), the sets $\mathbb{E}_{2}$
 and $\mathbb{E}_{3}$.}\label{fig:Conjecture1SetsE}
@@ -224,14 +294,14 @@ in \figref{M1}. Then we have
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=0.75\textwidth]{Conjecture_plot}
+\includegraphics[width=0.75\textwidth]{generated/Conjecture_plot}
 \par\end{centering}
 \caption{Parameter pairs in $\mathbb{M}_{2,z_{0}=0}$, but outside of $\mathbb{B}$.}\label{fig:M2Conjecture}
 \end{figure}
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=0.75\textwidth]{DynPlane_l-1698_m5}
+\includegraphics[width=0.75\textwidth]{generated/DynPlane_l-1698_m5}
 \par\end{centering}
 \caption{$(\lambda,\mu)=(-5e/8,5)$. $f_{\lambda,\mu}^{n}(c_{1})\protect\notin F_{0}$
 for $n=0,1,2$; $f_{\lambda,\mu}^{3}(c_{1})\in F_{0}$.}\label{fig:DynConjecture1}
@@ -239,7 +309,7 @@ for $n=0,1,2$; $f_{\lambda,\mu}^{3}(c_{1})\in F_{0}$.}\label{fig:DynConjecture1}
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=0.75\textwidth]{DynPlane_l-3058_m475}
+\includegraphics[width=0.75\textwidth]{generated/DynPlane_l-3058_m475}
 \par\end{centering}
 \caption{$(\lambda,\mu)=(-9e/8,4.75)$. $f_{\lambda,\mu}^{n}(c_{1})\protect\notin F_{0}$
 for $n=0,1,2,3,4$; $f_{\lambda,\mu}^{5}(c_{1})\in F_{0}$.}\label{fig:DynConjecture2}
@@ -247,7 +317,7 @@ for $n=0,1,2,3,4$; $f_{\lambda,\mu}^{5}(c_{1})\in F_{0}$.}\label{fig:DynConjectu
 
 \begin{figure}[tbh]
 \begin{centering}
-\includegraphics[width=0.75\textwidth]{DynPlane_l-3624_m55}
+\includegraphics[width=0.75\textwidth]{generated/DynPlane_l-3624_m55}
 \par\end{centering}
 \caption{$(\lambda,\mu)=(-4e/3,5.5)$. $f_{\lambda,\mu}^{n}(c_{1})\protect\notin F_{0}$
 for $n=0,1,2,3$; $f_{\lambda,\mu}^{4}(c_{1})\in F_{0}$.}\label{fig:DynConjecture3}
@@ -283,11 +353,11 @@ set. We state the following
 \paragraph*{Conjecture 4.}
 
 $f_{\lambda,\mu}$ is a family of quadratic-like maps in a set of
-parameters $Q\subset[-4.5,-3.5]\times[4,5]$.\\
+parameters $Q_{1}\subset[-4.5,-3.5]\times[4,5]\subset\mathcal{D}'$.\\
 
 
 \paragraph*{Conjecture 5.}
 
-There are infinite many subsets of parameters for which $f_{\lambda,\mu}$
-is a family of quadratic-like maps.
+There are infinite many disjoint subsets $Q_{k}$ of parameters for
+which $f_{\lambda,\mu}$ is a family of quadratic-like maps.
 \end{document}
