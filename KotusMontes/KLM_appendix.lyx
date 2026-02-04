@@ -1104,11 +1104,11 @@ Baker bulbs
 \end_inset
 
  
-\begin_inset Formula $\mathbb{M}_{2,z_{0}=\infty}$
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=0}$
 \end_inset
 
  (left) and 
-\begin_inset Formula $\mathbb{M}_{2,z_{0}=0}$
+\begin_inset Formula $\mathbb{M}_{2,z_{0}=\infty}$
 \end_inset
 
  (right).
@@ -1834,6 +1834,19 @@ There are infinite many disjoint subsets
 \end_inset
 
  is a family of quadratic-like maps.
+\end_layout
+
+\begin_layout Standard
+check paper 2018
+\end_layout
+
+\begin_layout Standard
+verify definitions figure 7
+\end_layout
+
+\begin_layout Standard
+make figure bulb 1,
+ attractor real always?
 \end_layout
 
 \end_body
