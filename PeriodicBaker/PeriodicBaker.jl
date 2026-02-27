@@ -89,6 +89,26 @@ function f(a::Number, z::Number)
 	(z*exp(z)+1)/(a-z)
 end
 
+# ╔═╡ 8c2ef3eb-9081-41aa-9253-75dee48fae4a
+function f2(a::Number, z::Number)
+	if isinf(z)
+		if real(z)<0
+			return 0
+		else
+			return Inf
+		end
+	elseif abs2(z-a)<0.00000001
+		return Inf
+	end
+	(z*2^z+2)/(a-z)
+end
+
+# ╔═╡ dba9d0f8-b138-4047-a144-0910413835a2
+f2´(a::Number, z::Number) = ((2^z*z*log(2)*2^z)*(a-z)+(z*2^z+1))/((a-z)^2)
+
+# ╔═╡ fd74171f-bf1b-4667-909f-fa72842b36ea
+f2´(5,1)
+
 # ╔═╡ 8e255a87-fe1c-4ab0-9330-1128cc317744
 f´(a::Number, z::Number) = ((a+a*z-z^2)*exp(z)+1)/((a-z)^2)
 
@@ -111,6 +131,12 @@ function createf´a(a::Number)
 		 ((a+a*z-z^2)*exp(z)+1)/((a-z)^2)
 	end
 end
+
+# ╔═╡ 825b08d4-492f-46ec-af73-1dcc2aa5b44d
+h(z::Number) = z*exp(z)+1
+
+# ╔═╡ 6c8c7c51-2fc7-4faa-8d2f-a8926096bad0
+let z0 = 2; h(z0),exp(z0) end
 
 # ╔═╡ 8b152eed-60e1-4e0b-abfc-e38d2f06c1ef
 md"""
@@ -220,9 +246,6 @@ function compassC1(f::Function, zC::Number, size::Real=1.0; ε::Real=0.0000001, 
 	compassCRec(zC, size, maxiterations)
 end
 
-# ╔═╡ b02bddf3-40c1-4cb9-bdee-7de17456bba1
-g(-im,-im)
-
 # ╔═╡ 208f363e-dc10-4307-aa27-3299ba2057a5
 md"""
 ## Dynamic plane
@@ -257,11 +280,65 @@ md"""
 ## Parameter plane
 """
 
+# ╔═╡ 0f70e078-8b80-42fc-95e3-b3635806485a
+# ╠═╡ disabled = true
+#=╠═╡
+let
+	Npix = 800
+	xmin,xmax,ymin,ymax = -12,12,-8,8
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 100
+	cm = cuherx #vermeerx
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(Npix,9Npix/16))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:2:xmax, xgridcolor=gridc,
+			yticks=ymin:2:ymax, ygridcolor=gridc)
+
+	mandelbrot!(ax,
+		(b,z) -> fb(b, z), xs, ys,
+		#seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		seed = -0.1,
+		#hasescaped = (a,z) -> real(z)>36,
+		#hasescaped = (a,z) -> abs2(z-f(a,z))<0.001,
+		hasescaped = (a,z) -> real(z)>144 || abs2(z-f(a,z))<0.0001,
+		#hasescaped = (a,z) -> abs(real(z))>36 || abs2(z-f(a,f(a,z)))<0.0001,
+		#hasescaped = (a,z) -> abs2(z-f(a,f(a,z)))<0.0001,
+		#hasescaped = (a,z) -> abs2(z-f(a,f(a,f(a,z))))<0.0001,
+		maxiterations=maxits, colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	Colorbar(fig[2, 1], limits = (1, maxits), colormap = cm,
+    label = "Iterations", vertical = false, flipaxis = false)
+
+	#save("Sienra_Leaf_0.jpg", fig)
+	
+	fig
+end
+  ╠═╡ =#
+
+# ╔═╡ ba78d825-ec3e-47ad-9d29-8dd4a20af9c2
+md"""
+## Bifurcations
+"""
+
+# ╔═╡ 90812a7f-e0f6-4671-acf6-4ba3bc72ad76
+-0.25/(1-1/ℯ)
+
 # ╔═╡ 597ce818-bbd4-44b3-b985-80127d9feae7
+# ╠═╡ disabled = true
+#=╠═╡
 let
 	L(a,x)=a*x*(1-x)
 	
-	Npix = 600
+	Npix = 400
 	xmin,xmax,ymin,ymax = -0.1,4.1,-0.1,1.1
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -307,6 +384,42 @@ let
 
 	fig
 end
+  ╠═╡ =#
+
+# ╔═╡ eb695b97-d523-48b2-956f-b12ef2709e37
+md"""
+## Binary descomposition
+"""
+
+# ╔═╡ be3c5459-5307-4554-b357-8e8d6e10edfa
+function mandelbindesc(f::Function, xs::AbstractVector, ys::AbstractVector; seed::Function=c->0, iterations::Int=20, hasescaped::Function=(c,z)->abs2(z)>4)
+	img = fill(RGB(1,0,0), length(ys), length(xs))
+
+	for ny in 1:length(ys)
+		y = ys[ny]
+		for nx in 1:length(xs)
+			x = xs[nx]
+			c = complex(x,y)
+			z = seed(c)
+			for n in 1:iterations
+				if hasescaped(c,z)
+					v = 0.125/n
+					img[end-ny+1,nx] = imag(z)>0 ? RGB(1-v,1-v,1-v) : RGB(v,v,v)
+					break
+				end
+				z = f(c,z)
+			end
+		end
+	end
+
+	img
+end
+
+# ╔═╡ bf06b32c-7190-4e7d-9d3b-36a9b735deec
+mandelbindesc((c,z)->z^2+c, -2.5:0.001:1.5, -2:0.001:2, iterations = 32, seed=c->0)
+
+# ╔═╡ ae3e8bda-5e36-4fa4-8ca3-ed8c5f9354d1
+mandelbindesc((c,z)->z^2+c, -2.5:0.01:1.5, -2:0.01:2, iterations = 64, seed=c->0, hasescaped=(c,z)->abs2(z-z^2-c)<0.00001)
 
 # ╔═╡ 7a0d58fd-7238-4f0c-accf-9e429ca4d325
 md"""
@@ -527,12 +640,18 @@ md"""
 # ╔═╡ dcc54357-7342-4978-a0e3-ae25b3161158
 f(l::Number, m::Number, z::Number) = l*exp(z)+m/z
 
+# ╔═╡ 5ebe57d2-cde3-40db-afc7-85fb6ee3cb0f
+f(-1.595,-0.815)
+
+# ╔═╡ 4f5e7718-6a06-4694-a6b7-d3cb62e5dac8
+fb(b::Number, z::Number) = f(0.25/b,z)
+
 # ╔═╡ 97f0ae6e-02b2-4f5f-a0d6-83c1bbac8666
 f(1,-Inf)
 
 # ╔═╡ ab535ab3-bb51-496d-b984-aef9a1b991d1
 let
-	Npix = 400
+	Npix = 600
 	xmin,xmax,ymin,ymax = -2,4.5,-1.25,1.25
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -555,7 +674,53 @@ let
 		seed = -0.1,
 		#hasescaped = (a,z) -> real(z)>36,
 		#hasescaped = (a,z) -> abs2(z-f(a,z))<0.001,
-		hasescaped = (a,z) -> real(z)>64 || abs2(z-f(a,z))<0.0001,
+		hasescaped = (a,z) -> real(z)>64 || abs2(z-a)<0.0001 || abs2(z-f(a,z))<0.0001,
+		#hasescaped = (a,z) -> abs(real(z))>36 || abs2(z-f(a,f(a,z)))<0.0001,
+		#hasescaped = (a,z) -> abs2(z-f(a,f(a,z)))<0.0001,
+		#hasescaped = (a,z) -> abs2(z-f(a,f(a,f(a,z))))<0.0001,
+		maxiterations=maxits, colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
+	#scatter!(ax, [Point2f(-20,0.25)], markersize=12, color=:red)
+	#text!(Point2f(-20,0.25), text="(-20,0.25)", color=:red, align = (:left,:bottom), fontsize=0.5,
+#		markerspace= :data)	
+
+	Colorbar(fig[2, 1], limits = (1, maxits), colormap = cm,
+    label = "Iterations", vertical = false, flipaxis = false)
+
+	#save("Sienra_Leaf_0.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ 3634daea-615f-4e94-8ed9-901a27c74424
+let
+	Npix = 400
+	xmin,xmax,ymin,ymax = -0.5,1.5,0.5,1.0
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 200
+	cm = cuherx #vermeerx
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(Npix,9Npix/16))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:0.5:xmax, xgridcolor=gridc,
+			yticks=ymin:0.25:ymax, ygridcolor=gridc)
+
+	mandelbrot!(ax,
+		(a,z) -> f(a, z), xs, ys,
+		#seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		seed = -0.1,
+		#hasescaped = (a,z) -> real(z)>36,
+		#hasescaped = (a,z) -> abs2(z-f(a,z))<0.001,
+		hasescaped = (a,z) -> real(z)>144 || abs2(z-a)<0.0001 || abs2(z-f(a,z))<0.000001,
 		#hasescaped = (a,z) -> abs(real(z))>36 || abs2(z-f(a,f(a,z)))<0.0001,
 		#hasescaped = (a,z) -> abs2(z-f(a,f(a,z)))<0.0001,
 		#hasescaped = (a,z) -> abs2(z-f(a,f(a,f(a,z))))<0.0001,
@@ -578,7 +743,7 @@ end
 
 # ╔═╡ d5872959-a8a4-443a-909a-265eddb9b5a1
 let
-	Npix = 1200
+	Npix = 600
 	xmin,xmax,ymin,ymax = -2,4.5,-1.25,1.25
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
@@ -602,7 +767,7 @@ let
 		#seed = a -> compassC(z->g(a,z), real(a) >= 0 ? a+2 : abs(g(a,a)), real(a) >= 0 ? 1 : 0.9abs(g(a,a))),
 		#hasescaped = (a,z) -> real(z)>36,
 		#hasescaped = (a,z) -> abs2(z-f(a,z))<0.001,
-		hasescaped = (a,z) -> real(z)>144 || abs2(z-f(a,z))<0.0001,
+		hasescaped = (a,z) -> real(z)>144 || abs2(z-a)<0.0001 || abs2(z-f(a,z))<0.0001,
 		#hasescaped = (a,z) -> abs(real(z))>36 || abs2(z-f(a,f(a,z)))<0.0001,
 		#hasescaped = (a,z) -> abs2(z-f(a,f(a,z)))<0.0001,
 		#hasescaped = (a,z) -> abs2(z-f(a,f(a,f(a,z))))<0.0001,
@@ -618,7 +783,7 @@ let
 	Colorbar(fig[2, 1], limits = (1, maxits), colormap = cm,
     label = "Iterations", vertical = false, flipaxis = false)
 
-	save("SienraLeaf_critic.jpg", fig)
+	#save("SienraLeaf_critic.jpg", fig)
 	
 	fig
 end
@@ -645,39 +810,41 @@ let
 
 	for a in xs
 		c0 = 0
-		ga = g(a,a)
-		z0 = a + ga/abs(ga)
-		c1 = newtonraphsonC(z->g(a,z), z->g´(a,z), z0)
+		#ga = g(a,a)
+		#z0 = a + ga/abs(ga)
+		#c1 = newtonraphsonC(z->g(a,z), z->g´(a,z), z0)
 
 		for n in 1:its1
-			c1 = f(a,c1)
+			#c1 = f(a,c1)
 			c0 = f(a,c0)
 		end
 
 		points0 = [Point2f(a,real(c0))]		
-		points1 = [Point2f(a,real(c1))]		
+		#points1 = [Point2f(a,real(c1))]		
 		for n in 1:its2
 			c0 = f(a,c0)
 			push!(points0, Point2f(a,real(c0)))
-			c1 = f(a,c1)
-			push!(points1, Point2f(a,real(c1)))
+			#c1 = f(a,c1)
+			#push!(points1, Point2f(a,real(c1)))
 		end
 
 		#scatter!(ax, points0, markersize=4, color=:black)
 		#scatter!(ax, points1, markersize=4, color=:red)
 		scatter!(ax, deepcopy(points0), markersize=2, color=:black)
-		scatter!(ax, deepcopy(points1), markersize=2, color=:red)
+		#scatter!(ax, deepcopy(points1), markersize=2, color=:red)
 		
 		empty!(points0)
-		empty!(points1)
+		#empty!(points1)
 	end
+
+	vlines!(ax,[-1/(1-1/(ℯ))],color=:red)
 
 	fig
 end
 
 # ╔═╡ a87d4962-eb05-45e4-9cc5-5367dd13b8d2
 let
-	Npix = 800
+	Npix = 400
 	xmin,xmax,ymin,ymax = -1.75,0,-2,1
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = 0.001 #min(Δx,Δy)
@@ -729,7 +896,7 @@ end
 
 # ╔═╡ 9acb88d5-f6a1-403a-ab7f-41501af82487
 let
-	Npix = 800
+	Npix = 400
 	xmin,xmax,ymin,ymax = 3.5,4.5,-0.5,1.5
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = 0.001 #min(Δx,Δy)
@@ -779,8 +946,26 @@ let
 	fig
 end
 
+# ╔═╡ aca5fa1e-f1cf-42df-bcf0-41af7cbc96d7
+imgattrbifdiagram(f, -2.5:0.0025:4.5, -1.5:0.0025:1.5, 0, iterations=5000, colormap=Gr.reverse(:magma))
+
+# ╔═╡ 3d96d4da-3193-42a4-8e28-8b8840d563a5
+imgattrbifdiagram(f, -0.1:0.002:4.3, -0.001:0.0002:0.1, 0, iterations=4000, hidediterations=0, colormap=Gr.reverse(:magma))
+
+# ╔═╡ 2ef7d677-f1b0-4604-906c-118fac0cd2f6
+imgattrbifdiagram(f, -1.75:0.0005:0.05, -0.1:0.005:1.1, 0, iterations=8000, hidediterations=0, colormap=Gr.reverse(:magma))
+
+# ╔═╡ f0ba8554-2b5f-4fb0-9fe0-d899872740ba
+imgattrbifdiagram(f, -1.75:0.0005:0.05, -3.5:0.005:-0.5, 0, iterations=8000, hidediterations=0, colormap=Gr.reverse(:magma))
+
+# ╔═╡ 13ffbad3-0899-4388-9c4b-813a05009502
+mandelbindesc(f, -2.5:0.01:4.5, -1.5:0.01:1.5, iterations = 128, seed=a->0, hasescaped=(a,z)->real(z)>64 || abs2(z-f(a,z))<0.00001)
+
 # ╔═╡ 04d2ed2f-de6c-4e5a-a5de-c848b6de8a87
 f2(l::Number, m::Number, z::Number) = l*exp(l*exp(z)+m/z)+m*z/(l*z*exp(z)+m)
+
+# ╔═╡ 67aec06a-64ae-43a2-9093-b38790258880
+f2(5,1)
 
 # ╔═╡ 729aaaf9-28f3-4274-9a26-12fc6f80f074
 f´(l::Number, m::Number, z::Number) = l*exp(z)-m/(z^2)
@@ -940,12 +1125,20 @@ end
 # ╟─afe66166-e9ca-11f0-bad5-59bd6959ad58
 # ╟─f6b33556-cda7-4e17-8b1d-22801fb00c85
 # ╠═b4c616d2-e720-465d-927d-e8534dc6cbec
+# ╠═5ebe57d2-cde3-40db-afc7-85fb6ee3cb0f
+# ╠═8c2ef3eb-9081-41aa-9253-75dee48fae4a
+# ╠═67aec06a-64ae-43a2-9093-b38790258880
+# ╠═dba9d0f8-b138-4047-a144-0910413835a2
+# ╠═fd74171f-bf1b-4667-909f-fa72842b36ea
+# ╠═4f5e7718-6a06-4694-a6b7-d3cb62e5dac8
 # ╠═97f0ae6e-02b2-4f5f-a0d6-83c1bbac8666
 # ╠═8e255a87-fe1c-4ab0-9330-1128cc317744
 # ╠═e9a1d66a-abe1-4451-96ce-eccc6e887731
 # ╠═1464c2e2-aebf-488b-b1a5-15895edd0d05
 # ╠═c7fa0c18-f71a-4afa-8541-5f00dbfad2b5
 # ╠═7d58b085-2f4d-4f2f-a392-5074b98d7663
+# ╠═825b08d4-492f-46ec-af73-1dcc2aa5b44d
+# ╠═6c8c7c51-2fc7-4faa-8d2f-a8926096bad0
 # ╟─8b152eed-60e1-4e0b-abfc-e38d2f06c1ef
 # ╟─7087d5f4-86a4-4ed6-9970-3361ab584c79
 # ╠═559b6103-c4f9-4edb-9f30-fc51ca2184cf
@@ -954,17 +1147,29 @@ end
 # ╟─e8e876c1-a196-406a-b444-a8618a208690
 # ╟─639e9512-7281-4bc7-8bfc-76f4409306c6
 # ╠═f58338d6-a72a-4e23-8814-d3a88a5bb73f
-# ╠═b02bddf3-40c1-4cb9-bdee-7de17456bba1
 # ╟─208f363e-dc10-4307-aa27-3299ba2057a5
 # ╠═8bcefc7f-d7ba-4566-a3be-7400f2797964
 # ╠═e0ff84af-11fd-4c81-8792-8c45e20984b2
 # ╟─ffc2b1aa-c1d9-4c69-bccd-94d24b9744aa
 # ╠═ab535ab3-bb51-496d-b984-aef9a1b991d1
+# ╠═3634daea-615f-4e94-8ed9-901a27c74424
+# ╠═0f70e078-8b80-42fc-95e3-b3635806485a
 # ╠═d5872959-a8a4-443a-909a-265eddb9b5a1
+# ╟─ba78d825-ec3e-47ad-9d29-8dd4a20af9c2
+# ╠═90812a7f-e0f6-4671-acf6-4ba3bc72ad76
 # ╠═683e2ae4-07cd-48b2-839f-717896f3e8a1
 # ╠═a87d4962-eb05-45e4-9cc5-5367dd13b8d2
 # ╠═9acb88d5-f6a1-403a-ab7f-41501af82487
+# ╠═aca5fa1e-f1cf-42df-bcf0-41af7cbc96d7
+# ╠═3d96d4da-3193-42a4-8e28-8b8840d563a5
+# ╠═2ef7d677-f1b0-4604-906c-118fac0cd2f6
+# ╠═f0ba8554-2b5f-4fb0-9fe0-d899872740ba
 # ╠═597ce818-bbd4-44b3-b985-80127d9feae7
+# ╟─eb695b97-d523-48b2-956f-b12ef2709e37
+# ╠═be3c5459-5307-4554-b357-8e8d6e10edfa
+# ╠═bf06b32c-7190-4e7d-9d3b-36a9b735deec
+# ╠═ae3e8bda-5e36-4fa4-8ca3-ed8c5f9354d1
+# ╠═13ffbad3-0899-4388-9c4b-813a05009502
 # ╠═d52d0e77-9a16-4163-b2ef-10779cd1cdff
 # ╠═7a0d58fd-7238-4f0c-accf-9e429ca4d325
 # ╠═7af6c311-4ff3-4f71-84f0-8d9ef2d591c8

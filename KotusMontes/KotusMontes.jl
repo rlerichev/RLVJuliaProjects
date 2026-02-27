@@ -1017,6 +1017,71 @@ GLMakie.activate!()
 # ╔═╡ a07e4983-d801-47ba-9531-16bdfb1f5f26
 const Gr = SDDGraphics
 
+# ╔═╡ 7ed364cb-783a-4158-a802-f9ce0cea2372
+let
+	l,m = -1,6
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -10,4,-8,8
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 100
+	cm = Gr.reverse(:cubehelix) #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(Npix,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	#c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:bottom), fontsize=0.75, markerspace=:data, offset=(0.1,0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c1),-imag(c1)), text=L"c_{-1}", color=:red, align=(:left,:top), fontsize=0.75, markerspace=:data, offset=(0.3,-0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),-imag(c2)), text=L"c_{-2}", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	#text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.5, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.5)], linewidth=3.2, markersize=12, iterations=3)
+	#orbitpath!(ax, f2, conj(c1), colormap=[:yellow], linewidth=0.5, markersize=4, iterations=20)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	#scatter!(ax, [Point2f(real(c3), imag(c3))#=, Point2f(real(c3), -imag(c3))=#], color=:green, markersize=8)	
+
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	text!(ax, Point2f(-0.5,0), text=L"F_0", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
+
+	#save("DynPlane_l-1_m6.jpg", fig)
+	
+	fig
+end
+
 # ╔═╡ cd230555-d920-4eb7-863c-e4ef586e84a0
 let
 	Npix = 400
@@ -1111,10 +1176,10 @@ end
 
 # ╔═╡ aba0a028-b304-4a8d-91d3-f52693f34559
 let
-	l,m = -1,0.25 # -4,4.5
+	l,m = -1,0.25
 
-	Npix = 400
-	xmin,xmax,ymin,ymax = -10,4,-12,12
+	Npix = 200
+	xmin,xmax,ymin,ymax = -10,4,-6,6
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
 	xs = xmin:Δ:xmax
@@ -1124,7 +1189,7 @@ let
 	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
 	gridc = RGBA(0.25,0.25,0.25,0.25)
 	
-	fig = Figure(size=(Npix,4Npix/3))
+	fig = Figure(size=(4Npix/3,Npix))
 	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
 			backgroundcolor=RGBA(1,1,1,0),
 			xticks=xmin:1:xmax, xgridcolor=gridc,
@@ -1144,27 +1209,80 @@ let
 	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
 	c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
 
-	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:center),
-		  fontsize=0.5, markerspace=:data, offset=(0.25,0))
-	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center),
-		  fontsize=0.5, markerspace=:data, offset=(-0.25,0))
-	text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center),
-		  fontsize=0.5, markerspace=:data, offset=(-0.25,0))
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:center), fontsize=0.75, markerspace=:data, offset=(0.25,0))
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+	text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
 
 	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.75)], linewidth=0.5, markersize=4, iterations=100)
 	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
 
-	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=8)	
-	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=8)	
-	scatter!(ax, [Point2f(real(c3), imag(c3)), Point2f(real(c3), -imag(c3))], color=:green, markersize=8)	
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	scatter!(ax, [Point2f(real(c3), imag(c3)), Point2f(real(c3), -imag(c3))], color=:green, markersize=12)	
 
-	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center),
-		  fontsize=0.75, markerspace=:data)
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
 
 	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
-    label = "Iterations", vertical = true, flipaxis = true)
+    label = "Iterations", labelsize=32, vertical = true, flipaxis = true)
 
 	#save("DynPlane_l-1_m025.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ cc35a09f-fba6-4867-aca2-fb4af23247d5
+let
+	l,m = -1,0.25
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -0.5,0.5,-0.5,0.5
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 75
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(4Npix/3,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:center), fontsize=0.05, markerspace=:data, offset=(0,0))
+	#text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+	#text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.75)], linewidth=0.5, markersize=4, iterations=100)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	scatter!(ax, [Point2f(real(c3), imag(c3)), Point2f(real(c3), -imag(c3))], color=:green, markersize=12)	
+
+	#text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+	text!(ax, Point2f(0,0), text=L"F_0", color=:black, align=(:right,:center), fontsize=0.06, markerspace=:data, offset=(-0.02,0))
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", labelsize=32, vertical = true, flipaxis = true)
+
+	#save("DynPlane_l-1_m025_zoom.jpg", fig)
 	
 	fig
 end
@@ -1660,6 +1778,175 @@ let
 	fig
 end
 
+# ╔═╡ de72dd3c-e2cf-4dc9-923c-5284f37cf7e4
+let
+	l,m = -3,0.05
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -10,4,-6,6
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 75
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(4Npix/3,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:center,:bottom), fontsize=0.75, markerspace=:data, offset=(0,0.1))
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+	text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.75)], linewidth=0.5, markersize=4, iterations=100)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	scatter!(ax, [Point2f(real(c3), imag(c3)), Point2f(real(c3), -imag(c3))], color=:green, markersize=12)	
+
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
+
+	#save("DynPlane_l-3_m005.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ f6f84b38-16be-4065-95af-7b8898cc3f08
+let
+	l,m = -3,0.05
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -0.05,0.05,-0.05,0.05
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 75
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(4Npix/3,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:center,:bottom), fontsize=0.05, markerspace=:data, offset=(0,0.1))
+	#text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+	#text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.75)], linewidth=0.5, markersize=4, iterations=100)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	scatter!(ax, [Point2f(real(c3), imag(c3)), Point2f(real(c3), -imag(c3))], color=:green, markersize=12)	
+
+	#text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+	text!(ax, Point2f(0,0), text=L"F_0", color=:black, align=(:right,:center), fontsize=0.005, markerspace=:data, offset=(-0.0025,0))
+	
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
+
+	#save("DynPlane_l-3_m005_zoom.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ 4ee62561-4c49-414f-86c3-441d5c99c509
+let
+	l,m = -0.5,1
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -10,4,-6,6
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 120
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(4Npix/3,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:center), fontsize=0.75, markerspace=:data, offset=(0.25,0))
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+	text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.75)], linewidth=0.5, markersize=4, iterations=100)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	scatter!(ax, [Point2f(real(c3), imag(c3)), Point2f(real(c3), -imag(c3))], color=:green, markersize=12)	
+
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
+
+	#save("DynPlane_l-05_m1.jpg", fig)
+	
+	fig
+end
+
 # ╔═╡ 27c14328-82b4-46e6-9906-b85a667e3dff
 let
 	l,m = -2.0794454,0.25
@@ -1900,6 +2187,392 @@ let
     label = "Iterations", vertical = true, flipaxis = true)
 
 	#save("DynPlane_l-1698_m5.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ e1f1d054-50f1-4b1e-b534-e3fabcbc4060
+let
+	l,m = -4,10
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -10,4,-6,6
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 75
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(4Npix/3,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	#c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:bottom), fontsize=0.75, markerspace=:data, offset=(0.1,0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c1),-imag(c1)), text=L"c_{-1}", color=:red, align=(:left,:top), fontsize=0.75, markerspace=:data, offset=(0.3,-0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),-imag(c2)), text=L"c_{-2}", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	#text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.5, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.5)], linewidth=3.2, markersize=12, iterations=3)
+	#orbitpath!(ax, f2, conj(c1), colormap=[:yellow], linewidth=0.5, markersize=4, iterations=20)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	#scatter!(ax, [Point2f(real(c3), imag(c3))#=, Point2f(real(c3), -imag(c3))=#], color=:green, markersize=8)	
+
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	text!(ax, Point2f(-0.5,0), text=L"F_0", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
+
+	#save("DynPlane_l-4_m10.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ f3b939fc-e972-4f20-adb6-1a8f55257490
+let
+	l,m = -6,14
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -10,4,-6,6
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 75
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(4Npix/3,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	#c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:bottom), fontsize=0.75, markerspace=:data, offset=(0.1,0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c1),-imag(c1)), text=L"c_{-1}", color=:red, align=(:left,:top), fontsize=0.75, markerspace=:data, offset=(0.3,-0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),-imag(c2)), text=L"c_{-2}", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	#text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.5, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.5)], linewidth=3.2, markersize=12, iterations=3)
+	#orbitpath!(ax, f2, conj(c1), colormap=[:yellow], linewidth=0.5, markersize=4, iterations=20)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	#scatter!(ax, [Point2f(real(c3), imag(c3))#=, Point2f(real(c3), -imag(c3))=#], color=:green, markersize=8)	
+
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	text!(ax, Point2f(-0.5,0), text=L"F_0", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
+
+	#save("DynPlane_l-6_m14.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ 941cdada-47f4-42a4-82f7-0fff610d0288
+let
+	l,m = -8,24
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -10,4,-12,12
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 75
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(Npix,4Npix/3))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	#c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:bottom), fontsize=0.75, markerspace=:data, offset=(0.1,0.1))
+	text!(ax, Point2f(real(c1),-imag(c1)), text=L"c_{-1}", color=:red, align=(:left,:top), fontsize=0.75, markerspace=:data, offset=(0.3,-0.1))
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+	text!(ax, Point2f(real(c2),-imag(c2)), text=L"c_{-2}", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0))
+	#text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.5, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.5)], linewidth=3.2, markersize=12, iterations=3)
+	#orbitpath!(ax, f2, conj(c1), colormap=[:yellow], linewidth=0.5, markersize=4, iterations=20)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	#scatter!(ax, [Point2f(real(c3), imag(c3))#=, Point2f(real(c3), -imag(c3))=#], color=:green, markersize=8)	
+
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	text!(ax, Point2f(-0.5,0), text=L"F_0", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true)
+
+	#save("DynPlane_l-1_m6.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ ecd095ce-2597-4ee4-86b7-327559dafd97
+let
+	l,m = -6,20
+
+	Npix = 400
+	xmin,xmax,ymin,ymax = -10,4,-32,6
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 80
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(Npix/2,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	#c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:bottom), fontsize=0.75, markerspace=:data, offset=(0.1,0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c1),-imag(c1)), text=L"c_{-1}", color=:red, align=(:left,:top), fontsize=0.75, markerspace=:data, offset=(0.3,-0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),-imag(c2)), text=L"c_{-2}", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	#text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.5, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.75)], linewidth=3.2, markersize=12, iterations=3)
+	#orbitpath!(ax, f2, conj(c1), colormap=[:yellow], linewidth=0.5, markersize=4, iterations=20)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	#scatter!(ax, [Point2f(real(c3), imag(c3))#=, Point2f(real(c3), -imag(c3))=#], color=:green, markersize=8)	
+
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	text!(ax, Point2f(-0.5,0), text=L"F_0", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
+
+	#save("DynPlane_l-6_m20.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ adff5c88-468c-4be9-9239-4e8d02052984
+let
+	l,m = -8,18
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -10,4,-6,6
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 75
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(4Npix/3,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	#c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:bottom), fontsize=0.75, markerspace=:data, offset=(0.1,0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c1),-imag(c1)), text=L"c_{-1}", color=:red, align=(:left,:top), fontsize=0.75, markerspace=:data, offset=(0.3,-0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),-imag(c2)), text=L"c_{-2}", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	#text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.5, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.5)], linewidth=3.2, markersize=12, iterations=3)
+	#orbitpath!(ax, f2, conj(c1), colormap=[:yellow], linewidth=0.5, markersize=4, iterations=20)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	#scatter!(ax, [Point2f(real(c3), imag(c3))#=, Point2f(real(c3), -imag(c3))=#], color=:green, markersize=8)	
+
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	text!(ax, Point2f(-0.5,0), text=L"F_0", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
+
+	#save("DynPlane_l-8_m18.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ acc26e82-663f-42cc-bfde-5f2dcfdf9666
+let
+	l,m = -10,22
+
+	Npix = 200
+	xmin,xmax,ymin,ymax = -10,4,-6,6
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 75
+	cm = cuherx #vermeerx #Gr.reverse(:vangogh)
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+	
+	fig = Figure(size=(4Npix/3,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	f = createflm(l,m)
+	f2 = createflm2(l,m)
+	
+	trappedpoints!(ax, f, xs, ys, maxiterations=maxits,
+		hasescaped = z -> real(z) < -16, 
+		colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	#c1 = findcritic1b(l, m, maxiterations=20)
+	c1 = findcriticBif(0.001,2.999, l, m, maxiterations=20)
+	c2 = findcriticN(2, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+	#c3 = findcriticN(3, l, m, maxiterations=100, maxiterationscompass=16, ε=0.00000001)
+
+	text!(ax, Point2f(real(c1),imag(c1)), text=L"c_1", color=:red, align=(:left,:bottom), fontsize=0.75, markerspace=:data, offset=(0.1,0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c1),-imag(c1)), text=L"c_{-1}", color=:red, align=(:left,:top), fontsize=0.75, markerspace=:data, offset=(0.3,-0.1),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),imag(c2)), text=L"c_2", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	text!(ax, Point2f(real(c2),-imag(c2)), text=L"c_{-2}", color=:blue, align=(:right,:center),fontsize=0.75, markerspace=:data, offset=(-0.25,0),
+	strokecolor=:black, strokewidth=1)
+	#text!(ax, Point2f(real(c3),imag(c3)), text=L"c_3", color=:green, align=(:right,:center), fontsize=0.5, markerspace=:data, offset=(-0.25,0))
+
+	orbitpath!(ax, f, c1, colormap=[RGBA(1,0,0,0.5)], linewidth=3.2, markersize=12, iterations=3)
+	#orbitpath!(ax, f2, conj(c1), colormap=[:yellow], linewidth=0.5, markersize=4, iterations=20)
+	#orbitpath!(ax, f2, c2, colormap=[:magenta], linewidth=0.5, markersize=4, iterations=20)
+
+	scatter!(ax, [Point2f(real(c1), imag(c1)), Point2f(real(c1), -imag(c1))], color=:red, markersize=12)	
+	scatter!(ax, [Point2f(real(c2), imag(c2)), Point2f(real(c2), -imag(c2))], color=:blue, markersize=12)	
+	#scatter!(ax, [Point2f(real(c3), imag(c3))#=, Point2f(real(c3), -imag(c3))=#], color=:green, markersize=8)	
+
+	text!(ax, Point2f(-7,0), text=L"F_\infty", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	text!(ax, Point2f(-0.5,0), text=L"F_0", color=:black, align=(:center,:center), fontsize=0.8, markerspace=:data)
+
+	Colorbar(fig[1, 2], limits = (0, maxits), colormap = cm,
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
+
+	#save("DynPlane_l-10_m22.jpg", fig)
 	
 	fig
 end
@@ -2165,11 +2838,19 @@ let
 
 	#lines!(ax,[-ℯ,0],[0,1],color=:red,linewidth=1.5)
 	scatter!(ax, [Point2f(-20,0.25)], markersize=12, color=:red)
-	text!(Point2f(-20,0.25), text="(-20,0.25)", color=:red, align = (:left,:bottom), fontsize=0.5,
+	text!(Point2f(-20,0.25), text="(-20,0.25)", color=:red, align = (:left,:bottom), fontsize=1.2,
 		markerspace= :data)	
+	text!(ax, Point2f(-16,12), text=L"\mathbb{B}", color=:black, align=(:center,:center), fontsize=1.6, markerspace=:data)
+	text!(ax, Point2f(-1.5,6), text=L"\mathbb{F}_1", color=:black, align=(:center,:center), fontsize=1, markerspace=:data)
+	text!(ax, Point2f(-3.5,10), text=L"\mathbb{F}_2", color=:black, align=(:center,:center), fontsize=1, markerspace=:data)
+	text!(ax, Point2f(-5.5,14), text=L"\mathbb{F}_3", color=:black, align=(:center,:center), fontsize=1, markerspace=:data)
+	text!(ax, Point2f(-7.5,18.25), text=L"\mathbb{F}_4", color=:black, align=(:center,:center), fontsize=1, markerspace=:data)
+	text!(ax, Point2f(-9.5,22.5), text=L"\mathbb{F}_5", color=:black, align=(:center,:center), fontsize=1, markerspace=:data)
+	text!(ax, Point2f(-11.5,26.75), text=L"\mathbb{F}_6", color=:black, align=(:center,:center), fontsize=1, markerspace=:data)
+	text!(ax, Point2f(-13.5,31.25), text=L"\mathbb{F}_7", color=:black, align=(:center,:center), fontsize=1, markerspace=:data)
 
 	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
-    label = "Iterations", vertical = true, flipaxis = true)
+    label = "Iterations", vertical = true, flipaxis = true, labelsize=32)
 
 	#save("M1_plotbig.jpg", fig)
 	
@@ -2179,17 +2860,17 @@ end
 # ╔═╡ 0fa4f0d0-a16a-43d9-96ba-ab35321b0fe4
 let
 	Npix = 400
-	xmin,xmax,ymin,ymax = -10,0,0,10
+	xmin,xmax,ymin,ymax = -24,0,0,32
 	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
 	Δ = min(Δx,Δy)
 	xs = xmin:Δ:xmax
 	ys = ymin:Δ:ymax
 
-	maxits = 80
+	maxits = 200
 	cm = cuherx
 	gridc = RGBA(0.25,0.25,0.25,0.25)
 		
-	fig = Figure(size=(Npix,3Npix/4))
+	fig = Figure(size=(Npix,Npix))
 	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
 			backgroundcolor=RGBA(1,1,1,0),
 			xticks=xmin:1:xmax, xgridcolor=gridc,
@@ -2198,7 +2879,7 @@ let
 	mandelbrot!(ax,
 		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
 		seed = lm -> findcriticN(2, real(lm), imag(lm), maxiterations=100, maxiterationscompass=24, ε=0.000001),
-		hasescaped = (lm,z) -> abs(real(z))>8 || abs2(z-f2(real(lm),imag(lm),z))<0.0000001,
+		hasescaped = (lm,z) -> abs(real(z))>12, #|| abs2(z-f2(real(lm),imag(lm),z))<10e-12,
 		maxiterations=maxits, colormap=cm,
 		interpolate=true, fxaa=true, ssao=true, depth_shift=1
 	)
@@ -2211,9 +2892,53 @@ let
 	#	  color=:dodgerblue4, align = (:center,:bottom), fontsize=fs, markerspace= :data, offset=(0.025,0.025))	
 	
 	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
-    	label = "Iterations", vertical = true, flipaxis = true)	
+    	label = "Iterations", labelsize=32,
+		vertical = true, flipaxis = true)	
 	
-	#save("E2_plot.jpg", fig)
+	#save("E2_plot_big.jpg", fig)
+	
+	fig
+end
+
+# ╔═╡ 8889d7c7-72ec-4ef0-b3ea-740e2fd1074c
+let
+	Npix = 400
+	xmin,xmax,ymin,ymax = -24,0,20,62
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 200
+	cm = cuherx
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+		
+	fig = Figure(size=(Npix,Npix))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:1:xmax, xgridcolor=gridc,
+			yticks=ymin:1:ymax, ygridcolor=gridc)
+
+	mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticN(3, real(lm), imag(lm), maxiterations=100, maxiterationscompass=24, ε=0.000001),
+		hasescaped = (lm,z) -> abs(real(z))>12, #|| abs2(z-f2(real(lm),imag(lm),z))<10e-12,
+		maxiterations=maxits, colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	fs = 0.096
+	ms = 12
+	
+	#lines!(ax,[-ℯ,0],[0,1],color=:cadetblue,linewidth=1.75)
+	#text!(Point2f(-0.18,0.74), text=L"\mathcal{L}_{-1}",
+	#	  color=:dodgerblue4, align = (:center,:bottom), fontsize=fs, markerspace= :data, offset=(0.025,0.025))	
+	
+	Colorbar(fig[1, 2], limits = (1, maxits), colormap = cm,
+    	label = "Iterations", labelsize=32,
+		vertical = true, flipaxis = true)	
+	
+	#save("E3_plot_big_tr.jpg", fig)
 	
 	fig
 end
@@ -2542,6 +3267,80 @@ let
 	fig
 end
 
+# ╔═╡ a21952ba-d70f-4721-aea2-052168c1f514
+let
+	Npix = 400
+	xmin,xmax,ymin,ymax = -3.5,0,0,2
+	Δx,Δy = (xmax-xmin)/Npix, (ymax-ymin)/Npix
+	Δ = min(Δx,Δy)
+	xs = xmin:Δ:xmax
+	ys = ymin:Δ:ymax
+
+	maxits = 200
+	cm = cuhex #vermeerx
+	gridc = RGBA(0.25,0.25,0.25,0.25)
+		
+	fig = Figure(size=(Npix,3Npix/4))
+	ax = Makie.Axis(fig[1,1], aspect=DataAspect(), limits=(xmin,xmax,ymin,ymax),
+			backgroundcolor=RGBA(1,1,1,0),
+			xticks=xmin:0.5:xmax, xgridcolor=gridc,
+			yticks=ymin:0.25:ymax, ygridcolor=gridc)
+
+	mandelbrot!(ax,
+		(lm,z) -> f(real(lm), imag(lm), z), xs, ys,
+		seed = lm -> findcriticBif(0.001,2.999, real(lm), imag(lm), maxiterations=32, ε=0.00001),
+		hasescaped = (lm,z) -> stops(z->f(real(lm), imag(lm), z), z, 2, ε=0.0000025) && abs2(f(real(lm), imag(lm), z))<36, 
+		maxiterations=maxits, colormap=cm,
+		interpolate=true, fxaa=true, ssao=true, depth_shift=1
+	)
+
+	fs = 0.096 # FontSize
+	ms = 12 # MarkerSize
+
+	text!(ax, Point2f(-0.5,0.35), text=L"\mathbb{T}",fontsize=0.12, color=:white, align = (:left,:center), markerspace=:data, offset=(0.025,0.0))
+	text!(ax, Point2f(-0.5,1.5), text=L"\mathbb{P}_s",fontsize=0.12, color=:white, align = (:left,:center), markerspace=:data, offset=(0.025,0.0))	
+	text!(ax, Point2f(-1.75,0.75), text=L"\mathbb{S}",fontsize=0.12, color=:white, align = (:left,:center), markerspace=:data, offset=(0.025,0.0))
+	text!(ax, Point2f(-2.9,0.075), text=L"\mathbb{P}_m",fontsize=0.12, color=:white, align = (:left,:center), markerspace=:data, offset=(0.025,0.0))
+
+	
+	lines!(ax,[-ℯ,0],[0,1],color=:cadetblue,linewidth=1.75)
+	text!(Point2f(-0.18,0.74), text=L"\mathcal{L}_{-1}",
+		color=:dodgerblue4, align = (:center,:bottom), fontsize=fs, markerspace= :data, offset=(0.025,0.025))	
+	
+	#bifs1 = [Point2f(-1,0), Point2f(-1,1-1/ℯ), Point2f(-1,0.909075), Point2f(-1,1), Point2f(-1,1.9)]
+	#scatterlines!(ax, bifs1, markersize=ms, color=:gold)
+	#text!(ax, Point2f(-1,0), text="(-1,0)", fontsize=fs, color=:gold, align = (:left,:bottom), markerspace=:data, offset=(0.025,0.025))
+	#scatter!(ax, Point2f(-1,1-1/ℯ), markersize=ms, color=:black)
+	#text!(ax, Point2f(-1,1-1/ℯ), text="(-1,1-1/ℯ)", fontsize=fs, color=:black, align = (:left,:center), markerspace=:data, offset=(0.025,0.0))
+	#text!(ax, Point2f(-1,0.90975), text="(-1,0.090975)", fontsize=fs, color=:gold, align = (:left,:center), markerspace=:data, offset=(0.025,0.0))
+	scatter!(ax, Point2f(-1,1), markersize=ms, color=:white)
+	text!(ax, Point2f(-1,1), text="(-1,1)", fontsize=fs, color=:white, align = (:right,:center), markerspace=:data, offset=(-0.025,0.0))
+	#text!(ax, Point2f(-1,1.9), text="(-1,1.9)",fontsize=fs, color=:gold, align = (:left,:center), markerspace=:data, offset=(0.025,0.0))
+	
+	#bifs2 = [Point2f(-1,0.25), Point2f(-3ℯ/4,0.25), Point2f(-2.079445,0.25), Point2f(-3.3,0.25)]
+	#scatterlines!(ax, bifs2, markersize=ms, color=:red)
+	scatter!(ax, Point2f(-1,0.25), markersize=ms, color=:red)	
+	text!(Point2f(-1,0.25), text="(-1,1/4)", fontsize=fs, color=:red, 
+		  align = (:left,:center), markerspace=:data, offset=(0.025,0.0))	
+	scatter!(ax, Point2f(-0.5,1), markersize=ms, color=:red)	
+	text!(Point2f(-0.5,1), text="(-1/2,1)", fontsize=fs, color=:red, 
+		  align = (:center,:bottom), markerspace=:data, offset=(0.0,0.025))	
+	scatter!(ax, Point2f(-3,0.05), markersize=ms, color=:red)	
+	text!(Point2f(-3,0.05), text="(-3,1/20)", fontsize=fs, color=:red, 
+		  align = (:right,:center), markerspace=:data, offset=(-0.025,0.0))	
+	#text!(ax, Point2f(-3ℯ/4,0.25), text="(-3ℯ/4,1/4)", fontsize=fs, color=:red, 
+	#align = (:left,:bottom), markerspace=:data, offset=(0.025,0.025))			
+	#text!(Point2f(-2.079445,0.25), text="(-2.079445,1/4)", fontsize=fs, color=:red, align = (:right,:top), markerspace=:data, offset=(-0.025,-0.025))	
+	#text!(Point2f(-3.3,0.25), text="(-3.3,1/4)", fontsize=fs, color=:red, align = (:left,:bottom), markerspace=:data, offset=(-0.025,0.025))			
+	
+	Colorbar(fig[2, 1], limits = (1, maxits), colormap = cm,
+    label = "Iterations", vertical = false, flipaxis = false, labelsize=32)
+	
+	#save("Bifurcations_plot.jpg", fig)
+	
+	fig
+end
+
 # ╔═╡ 7e516588-5ad2-498b-89a6-91a376600ab2
 cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 
@@ -2579,7 +3378,8 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╟─e410e775-a417-40a2-8dbf-4c9c5050eef7
 # ╟─70f58eb7-adc8-451c-94a6-11344bbb200b
 # ╟─7273ed9e-5dfb-475b-b2a1-a65bfb64ab87
-# ╟─aba0a028-b304-4a8d-91d3-f52693f34559
+# ╠═aba0a028-b304-4a8d-91d3-f52693f34559
+# ╠═cc35a09f-fba6-4867-aca2-fb4af23247d5
 # ╟─12e25b26-5f8b-4bd8-9269-9b4672c66bf8
 # ╠═0e4944e6-0626-4644-bcc2-6c3f1a5c5b37
 # ╠═a8ede40d-b3b4-47f7-9a3c-2a787dc771a6
@@ -2604,6 +3404,9 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╟─60e1123d-f204-4eca-a522-ebbc7d38e263
 # ╠═a4fe1407-067c-4192-a6eb-844423a7a279
 # ╟─f7844fd7-3bd4-4cd7-886f-9a68c5eb4dd9
+# ╠═de72dd3c-e2cf-4dc9-923c-5284f37cf7e4
+# ╠═f6f84b38-16be-4065-95af-7b8898cc3f08
+# ╠═4ee62561-4c49-414f-86c3-441d5c99c509
 # ╟─7bb26926-347f-4a43-8fa7-f3cff2bddfae
 # ╟─27c14328-82b4-46e6-9906-b85a667e3dff
 # ╟─d6c23140-9dba-49c8-8a64-4186ccf1ca9e
@@ -2614,6 +3417,13 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╟─7e8d748e-50ee-48a5-9081-d7f0e400647d
 # ╠═9693d1da-7886-4d7a-906d-004196bd338f
 # ╠═3ac65d1b-4be0-4a15-9679-1dc485fde018
+# ╠═7ed364cb-783a-4158-a802-f9ce0cea2372
+# ╠═e1f1d054-50f1-4b1e-b534-e3fabcbc4060
+# ╠═f3b939fc-e972-4f20-adb6-1a8f55257490
+# ╠═941cdada-47f4-42a4-82f7-0fff610d0288
+# ╠═ecd095ce-2597-4ee4-86b7-327559dafd97
+# ╠═adff5c88-468c-4be9-9239-4e8d02052984
+# ╠═acc26e82-663f-42cc-bfde-5f2dcfdf9666
 # ╟─2bb4db46-4d9c-4eb0-8ea9-99d95d2804fa
 # ╠═ac30ebe5-915b-4f2a-9634-912d4d7ad369
 # ╟─1a785d2a-b284-465c-9585-a4a17388d608
@@ -2656,11 +3466,13 @@ cuherx_dark = pushfirst!(Gr.reverse(:cubehelix),RGB(0,0,0))
 # ╠═cec5a4bd-a6ba-4fe9-be63-ed6322e0f8c1
 # ╟─40f1cf47-2b5c-4d9e-bc8b-10ca781dffcc
 # ╠═3d076c9b-263b-4d62-a17e-afbd7fee2f21
+# ╠═a21952ba-d70f-4721-aea2-052168c1f514
 # ╟─05efe4d3-4126-449a-ac48-1799c4c2f28a
 # ╟─de1c003f-d951-47cf-acc3-beaea021298b
 # ╟─2c9f1a59-ad76-4476-8d32-7e158dcd2541
 # ╠═ee95a23b-177b-474d-a517-5cc9204831dd
 # ╠═0fa4f0d0-a16a-43d9-96ba-ab35321b0fe4
+# ╠═8889d7c7-72ec-4ef0-b3ea-740e2fd1074c
 # ╟─5cc6c94c-fccf-4251-aaf3-0629f396457f
 # ╠═fab68d9a-311d-451f-9289-caaec83569dc
 # ╠═d8613d71-af5e-4eb9-b065-b6467eae28b0
